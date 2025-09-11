@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chango&display=swap" rel="stylesheet">    <style>
+        html {
+            font-family: "Chango", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .flex { display: flex;
+                flex-direction: row }
+
+        .color-box { height: 100px;
+                     width: 100px }  
+        
+
+        #box1 {background-color: #255957 ;
+               color: white; }
+        #box2 {background-color: #E07A5F }
+        #box3 {background-color: #F4D7A4 }
+        #box4 {background-color: #77AF9C }
+        #box5 {background-color: #BFD7EA }
+        
+        p {font-size: 16px }
+
+        .small-text {font-size: 12px }
+
+        h3 {font-size: 20px }
+
+        h2 {font-size: 24px }
+
+        h1 {font-size: 28px;}
+
+        a { text-decoration: none;
+            color: #E07A5F; }
+        
+        a:hover {text-decoration: underline;
+                 color: #77AF9C }
+       
+        a:visited {color: #F4D7A4 }
+
+        .a-button {
+            width: 150px;
+            height: 50px;
+            background-color: #255957;
+            color: white;
+            border: 10px;
+            border-width: 5px;
+            border-radius: 15px;
+        }
+
+        .a-button:hover {
+            background-color: #77AF9C;
+            color: black;
+        }
+
+    </style>
+</head>
+
+<body>
+        <div class="flex">
+        <div class="color-box" id="box1">#255957 <br>contast: 7.93:1</div>
+        <div class="color-box" id="box2">#E07A5F <br>contrast: 7.11:1</div>
+        <div class="color-box" id="box3">#F4D7A4 <br>contrast: 15.1:1</div>
+        <div class="color-box" id="box4">#77AF9C <br>contrast: 8.39:1</div>
+        <div class="color-box" id="box5">#BFD7EA <br>contrast: 14.12:1</div>
+        </div>
+
+        <h1>THIS IS HEADING 1</h1>
+        <h2>this is heading 2</h2>
+        <h3>this is heading 3</h3>
+
+        <p>this is paragraph text</p>
+        <p class="small-text">this is small text</p>
+
+        <p><a href="https://coolors.co/255957-e07a5f-f2cc8f-77af9c-bfd7ea">this is a link</a></p>
+
+        <button class="a-button">a button is here</button>
+
+        <p>reflection <br>The color palette feels authentic to me because I actually like all of the colors I chose. They give off a coastal and kind of retro vibe, which reflects my preferences and parts of my personality. I like that the palette is balanced between calm and vibrant. However, I don’t feel the typography fully represents me yet. I don’t feel a strong connection to it, so I'm going to experiment with others for my actual portfolio site 
+            <br> One of my favorite visual elements is interactivity. I've really been enjoying seeing it when colors shift or change as you hover over elements. This feels true to me because I like when I can make something that engages people and that they can respond to in some way. I want my site to have a sense of playfulness while still being functional.  
+        <br>For accessibility, I was intentional about using descriptive words in my code instead of relying too much on divs. I also tested my site with the keyboard to make sure navigation worked without relying only on a mouse. Sometimes I want things to look a certain way or structure my code in a way that made more sense in my head, but to make it more accessible, I adjusted it. 
+    <br>Creating a cohesive design system surprised me with the cascading effect of styles. I’m still learning how CSS cascades through elements, and how one line of code can affect the entire website. Moving forward into my portfolio project, I plan to carry over some of these colors and use similar tools for creating buttons and hover states. I think the system feels flexible in terms of colors and interactive elements, but less flexible in typography right now since I haven’t found the exact typeface that resonates with me. Over time, I can refine this system to better suit different contexts by expanding typography options and adjusting the tone of colors depending on the project. </p>
+
+</body>
+</html>
