@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="styleica5.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <h3>Community Garden Project</h3>
+            <button 
+            class="expand-btn" 
+            aria-label="Expand card"
+            aria-expanded="false"
+            aria-controls="details"
+            title="expand"
+            >+</button>
+        </div>
+
+        <div class="card-content">
+            <p class="summary">Join neighbors in creating a shared growing space...</p>
+            
+            <div class="details hidden">
+                <p>Meeting every Saturday at 10am. Tools provided. All skill levels welcome.</p>
+                <p>Contact: garden@community.org</p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let info = false;
+
+        const expandBtn = document.querySelector('.expand-btn');
+        const details = document.querySelector('.card-content');
+
+        expandBtn.addEventListener('click', showInfo);
+
+        function showInfo () {
+            if (info == false) {
+                details.style.display = 'flex';
+                expandBtn.textContent = '-';
+                expandBtn.setAttribute('aria-expanded', true);
+                expandBtn.setAttribute('aria-label', 'collapse card');
+                info = true;
+            }
+            else {
+                details.style.display = 'none';
+                expandBtn.textContent = '+';
+                expandBtn.setAttribute('aria-expanded', false);
+                expandBtn.setAttribute('aria-label', 'expand card');
+                info = false; 
+            }
+        }
+
+    </script>
+
+</body>
+</html>
