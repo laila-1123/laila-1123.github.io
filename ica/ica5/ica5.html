@@ -22,7 +22,7 @@
         <div class="card-content">
             <p class="summary">Join neighbors in creating a shared growing space...</p>
             
-            <div class="details hidden">
+            <div class="details" id="details">
                 <p>Meeting every Saturday at 10am. Tools provided. All skill levels welcome.</p>
                 <p>Contact: garden@community.org</p>
             </div>
@@ -34,22 +34,22 @@
         let info = false;
 
         const expandBtn = document.querySelector('.expand-btn');
-        const details = document.querySelector('.card-content');
+        const details = document.querySelector('.details');
 
         expandBtn.addEventListener('click', showInfo);
 
         function showInfo () {
             if (info == false) {
-                details.style.display = 'flex';
+                details.classList.add('open');
                 expandBtn.textContent = '-';
-                expandBtn.setAttribute('aria-expanded', true);
+                expandBtn.setAttribute('aria-expanded', 'true');
                 expandBtn.setAttribute('aria-label', 'collapse card');
                 info = true;
             }
             else {
-                details.style.display = 'none';
+                details.classList.remove('open');
                 expandBtn.textContent = '+';
-                expandBtn.setAttribute('aria-expanded', false);
+                expandBtn.setAttribute('aria-expanded', 'false');
                 expandBtn.setAttribute('aria-label', 'expand card');
                 info = false; 
             }
