@@ -8,11 +8,15 @@ html {
 }
 
 .main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 20px;
 }
 
 nav {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     padding: 2em;
     background-color: #f4cbc6;
@@ -20,9 +24,9 @@ nav {
 
 .nav-menu {
     display: flex;
-    gap: 5vw;
+    align-items: center;
+    gap: 2rem;
     list-style: none;
-    padding-top: 2rem;
     margin: 0;
     text-align: right;
 }
@@ -49,16 +53,17 @@ nav {
     cursor: pointer;
     width: 44px;
     height: 44px;
-    padding: 8px;
     justify-content: center;
     align-items: center;
+    position: relative;
+    z-index: 1000;
 }
 
 .nav-toggle span {
   display: block;
   width: 25px;
   height: 3px;
-  margin: 5px auto;
+  margin: 4px 0;
   border-radius: 2px;
   background-color: #361D2E;
   transition: background-color 0.3s ease;
@@ -74,16 +79,24 @@ nav {
         display: block;
         position: fixed;
         top: 2rem;
-        right: 3rem;
+        right: 2rem;
         background: none;
         border: none;
         cursor: pointer;
+        z-index: 1001;
     }
 
     .nav-menu {
         display: none;
         flex-direction: column;
         gap: 1em;
+        position: fixed;
+        top: 70px;
+        right: 0;
+        width: 100%;
+        background-color: #f4cbc6;
+        padding: 1rem;
+        z-index: 1000;
         
     }
     .nav-menu.active {
