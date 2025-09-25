@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .gallery-container {
+            display: grid;
+            grid-template-areas: 
+            "header header"
+            "nav    sidebar"
+            "main   sidebar";
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto 1fr;
+            gap: 1rem;
+            min-height: 100vh;
+        }
+
+        .gallery-header {
+            grid-area: header;
+        }
+
+        .gallery-nav {
+            grid-area: nav;
+            display: grid;
+            grid-auto-flow: column;
+            gap: 0.5rem;
+        }
+
+        .gallery-grid { 
+            grid-area: main;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .gallery-sidebar {
+            grid-area: sidebar;
+        }
+
+        .photo-card { 
+            height: 200px; 
+            border: 2px solid black;
+            background: #ddd;
+            display: grid;
+            place-items: center;
+        }
+
+        .featured { 
+            grid-column: span 2;
+            height: 300px; 
+            background: lightgrey;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+  <header class="gallery-header">Photo Gallery</header>
+  <nav class="gallery-nav">
+    <button>All</button>
+    <button>Nature</button>
+    <button>Architecture</button>
+  </nav>
+  <main class="gallery-grid">
+    <div class="photo-card" data-category="nature">Photo 1</div>
+    <div class="photo-card" data-category="architecture">Photo 2</div>
+    <div class="photo-card" data-category="nature">Photo 3</div>
+    <div class="photo-card featured" data-category="architecture">Featured Photo</div>
+    <div class="photo-card" data-category="nature">Photo 5</div>
+    <div class="photo-card" data-category="architecture">Photo 6</div>
+  </main>
+  <aside class="gallery-sidebar">Filter Options</aside>
+</div>
+
+<script>
+    const filterButtons = document.querySelectorAll('.gallery-nav button');
+    const photoCards = document.querySelectorAll('.photo-card');
+
+    filterButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+        const filterValue = event.target.textContent.toLowerCase();
+        filterPhotos(filterValue);
+    });
+    });
+
+    function filterPhotos(category) {
+    photoCards.forEach(card => {
+    if (category === 'all' || card.dataset.category === category) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+    });
+}
+</script>
+
+</body>
+</html>
