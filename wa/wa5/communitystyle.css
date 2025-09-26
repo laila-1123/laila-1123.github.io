@@ -103,3 +103,15 @@ nav {
         display: flex;
     }
 }
+
+p, h1, h2, h3, ul, li {
+    padding: 10px;
+    align-items: center;
+    text-align: center;
+    list-style-position: inside;
+}
+
+.nav-brand {
+    text-decoration: none;
+    color: #361D2E;
+}
