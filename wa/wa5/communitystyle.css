@@ -192,7 +192,11 @@ p, h1, h2, h3, ul, li {
     padding: 2rem;
 }
 
-.left-side, .right-side {
+.left-side {
+    text-align: left;
+}
+
+.right-side {
     text-align: center;
 }
 
@@ -208,17 +212,26 @@ p, h1, h2, h3, ul, li {
     height: auto;
 }
 
-.btn {
+.home-buttons {
+    text-align: center;
+}
+
+.home-buttons a {
     display: inline-block;
     padding: 0.7rem 1.5rem;
     margin: 0.5rem 0.5rem 1rem 0;
     background-color: #f4afab;
-    color: white;
+    color: #361D2E;
     text-decoration: none;
     border-radius: 8px;
     font-weight: bold;
 }
 
-.btn:hover {
+.home-buttons a:hover {
     background-color: #784f41;
 }
+
+.hero p {
+    font-size: 20px;
+}
+
