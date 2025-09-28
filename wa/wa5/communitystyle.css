@@ -187,17 +187,26 @@ p, h1, h2, h3, ul, li {
 .home-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-areas: "left right";
     gap: 2rem;
-    align-items: start;
     padding: 2rem;
 }
 
 .left-side {
-    text-align: left;
+    grid-area: left;
 }
 
 .right-side {
-    text-align: center;
+    grid-area: right;
+}
+
+@media (max-width: 768px) {
+    .home-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+        "left" 
+        "right";
+    }
 }
 
 .current-reads {
@@ -214,6 +223,7 @@ p, h1, h2, h3, ul, li {
 
 .home-buttons {
     text-align: center;
+    margin-top: 2rem;
 }
 
 .home-buttons a {
@@ -229,6 +239,7 @@ p, h1, h2, h3, ul, li {
 
 .home-buttons a:hover {
     background-color: #784f41;
+    color: #f7edf0;
 }
 
 .hero p {

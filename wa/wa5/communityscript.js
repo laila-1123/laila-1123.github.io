@@ -13,21 +13,27 @@ const books = document.querySelectorAll(".book");
 let activeFilter = null
 
 filterButtons.forEach(button => {
+    button.setAttribute("aria-pressed", "false");
     button.addEventListener('click', (event) => {
         const filter = button.getAttribute("data-filter");
         
         if (activeFilter === filter) {
             activeFilter = null;
             button.classList.remove("active");
+            button.setAttribute("aria-pressed", "false");
             books.forEach(book => book.style.display = "");
             return;
         }
         
         activeFilter = filter;
 
-        filterButtons.forEach(btn => btn.classList.remove("active"));
-
-        button.classList.add("active");
+        filterButtons.forEach(btn => {
+            btn.classList.remove("active");
+            btn.setAttribute("aria-pressed", "false");
+        });
+            
+    button.classList.add("active");
+    button.setAttribute("aria-pressed", "true");
         
         //filtering
         books.forEach(book => {
@@ -39,3 +45,12 @@ filterButtons.forEach(button => {
     });
 });
 });
+
+document.addEventListener("keydown", (e) => {
+    if(e.key.toLocaleLowerCase() ==="f") {
+        document.querySelector("[data-filter='fiction']").click();
+    } else if (e.key.toLocaleLowerCase()=== "n") {
+        document.querySelector("[data-filter='nonfiction']").click();
+    
+    }
+})
