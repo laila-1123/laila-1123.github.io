@@ -221,12 +221,13 @@ p, h1, h2, h3, ul, li {
     height: auto;
 }
 
-.home-buttons {
+.home-buttons, .theme-toggle {
     text-align: center;
     margin-top: 2rem;
 }
 
-.home-buttons a {
+.home-buttons a, 
+.theme-toggle a {
     display: inline-block;
     padding: 0.7rem 1.5rem;
     margin: 0.5rem 0.5rem 1rem 0;
@@ -237,7 +238,8 @@ p, h1, h2, h3, ul, li {
     font-weight: bold;
 }
 
-.home-buttons a:hover {
+.home-buttons a:hover 
+.theme-toggle a:hover{
     background-color: #784f41;
     color: #f7edf0;
 }
@@ -245,4 +247,49 @@ p, h1, h2, h3, ul, li {
 .hero p {
     font-size: 20px;
 }
+
+body.dark {
+    background-color: #2c2c2c;
+    color: #f7edf0;
+}
+
+body.dark nav {
+    background-color: #444
+}
+body.dark .nav-brand, 
+body.dark .nav-menu a {
+    color: #f7edf0;
+}
+
+body.dark h1, 
+body.dark h2, 
+body.dark h3, 
+body.dark p, 
+body.dark li {
+    color: #f7edf0;
+}
+
+body.dark .btn, 
+body.dark .filter-buttons button, 
+body.dark .home-buttons a {
+    background-color: #784f41;
+    color: #fff;
+}
+body.dark .btn:hover, 
+body.dark .filter-buttons button:hover, 
+body.dark .home-buttons a:hover {
+    background-color: #d48c96;
+}
+body.dark a {
+    color: #f4cbc6;
+}
+
+body.dark a:hover {
+    color: #fff;
+}
+
+body.dark .nav-toggle span {
+    background-color: #f7edf0;
+}
+
 

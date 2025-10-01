@@ -35,6 +35,7 @@ filterButtons.forEach(button => {
     button.classList.add("active");
     button.setAttribute("aria-pressed", "true");
         
+    
         //filtering
         books.forEach(book => {
             if (filter === 'all' || book.getAttribute("data-genre") === filter) {
@@ -54,3 +55,15 @@ document.addEventListener("keydown", (e) => {
     
     }
 })
+
+// Save user's theme choice
+function setTheme(theme) {
+    localStorage.setItem('userTheme', theme);
+    document.body.className = theme;
+}
+
+// Load saved theme on page load
+window.addEventListener('load', function() {
+    const savedTheme = localStorage.getItem('userTheme') || 'light';
+    document.body.className = savedTheme;
+});
