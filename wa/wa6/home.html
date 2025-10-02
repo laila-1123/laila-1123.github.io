@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Book Club Hub</title>
+    <link rel="stylesheet" href="communitystyle.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <a href="home.html" class="nav-brand">Book Club Hub</a>
+        <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-menu">
+            <li><a href="about.html">About</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="books.html">Books</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+    <h1>Welcome to Book Club Hub!</h1>
+    <p>Boulder's community for book lovers</p>
+    </header>
+   
+    <section class="home-grid">     
+        <div class="left-side">
+        <div class="mission">
+            <h2>Our Mission</h2>
+            <p>We believe books are better when shared. Our mission is to make reading a collaborative, joyful experience by giving book clubs the tools they need to stay connected, track their reads, and spark meaningful conversations. <br><a href="about.html">Learn more...</a></p>
+            </div>
+            <div class="home-buttons">
+            <a href="books.html" class="btn">Explore our reads</a>
+            <a href="events.html" class="btn">Upcoming events</a>
+            </div>
+        
+        </div>
+        <div class="right-side">
+         <p>We're currently reading:</p>
+        <div class="current-reads">
+            <div class="book" data-genre="fiction">
+                <img src="img/botm1.png" alt="The Great Gatsby book covver">
+                <p>The Great Gatsby</p>
+            </div>
+            <div class="book" data-genre="nonfiction">
+                <img src="img/botm2.png" alt="Educated book cover">
+                <p>Educated</p>
+            </div>
+        </div>
+    </div>
+    </section> 
+
+<footer>
+    <div class="theme-toggle">
+        <button onclick = "setTheme('light')">Light Mode</button>
+        <button onclick = "setTheme('dark')">Dark Mode</button>   
+    </div>
+
+</footer>
+    
+
+    <script src="communityscript.js" defer ></script>
+  
+</body>
+</html>
