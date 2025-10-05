@@ -90,3 +90,20 @@ window.addEventListener('load', () => {
     const savedTheme= localStorage.getItem('userTheme') || 'light';
     document.body.className = savedTheme;
 })
+
+const optOutCheckbox = document.getElementById("optOutCheckbox");
+optOutCheckbox.checked = localStorage.getItem("optOut") === "true";
+
+optOutCheckbox.addEventListener("change", () => {
+    localStorage.setItem("optOut", optOutCheckbox.checked);
+    if (optOutCheckbox.checked) {
+        localStorage.clear();
+    }
+});
+
+function savedTheme (theme) {
+    const optOut = localStorage.getItem("optOut") === "true" ;
+    if (!optOut) {
+        localStorage.setItem("theme", theme);
+    }
+}
