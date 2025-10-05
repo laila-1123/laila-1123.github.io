@@ -292,4 +292,33 @@ body.dark .nav-toggle span {
     background-color: #f7edf0;
 }
 
+/* mobile */
+@media (max-width: 600px){
+    body {
+        font-size: 14px;
+    }
+    .nav, .content {
+        flex-direction: column;
+    }
+}
 
+/* tablet */
+@media (min-width: 601px) and (max-width: 1024px) {
+    body {
+        font-size: 16px;
+    }
+    .nav, .content {
+        justify-content:  space-around;
+    }
+}
+
+/* desktop */
+@media (min-width: 1025px){
+    body {
+        font-size: 18px;
+    }
+    .nav, .content {
+        display: flex;
+        justify-content: space-between;
+    }
+}
