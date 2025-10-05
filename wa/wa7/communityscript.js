@@ -3,6 +3,8 @@ const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.querySelector('.nav-menu');
 
 function toggleMenu (){
+    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+    navToggle.setAttribute('aria-expanded', !expanded);
     navMenu.classList.toggle('active');
 }
 
@@ -67,3 +69,24 @@ window.addEventListener('load', function() {
     const savedTheme = localStorage.getItem('userTheme') || 'light';
     document.body.className = savedTheme;
 });
+
+document.getElementById('clear-data').addEventListener('click', () => {
+    localStorage.clear();
+    alert('Data cleared!');
+});
+
+function setTheme(theme) {
+    const expiry = Date.now() + 100 *60*60*24;
+    localStorage.setItem('userTheme', theme);
+    localStorage.setItem('expiry', expiry);
+    document.body.className = theme;
+}
+
+window.addEventListener('load', () => {
+    const expiry = localStorage.getItem('expiry');
+    if (expiry && Date.now () > expiry) {
+        localStorage.clear ();
+    }
+    const savedTheme= localStorage.getItem('userTheme') || 'light';
+    document.body.className = savedTheme;
+})

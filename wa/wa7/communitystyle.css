@@ -322,3 +322,12 @@ body.dark .nav-toggle span {
         justify-content: space-between;
     }
 }
+
+.card-container {
+    container-type: inline-size;
+}
+@container (min-width: 500px) {
+    .card {
+        flex-direction: row;
+    }
+}
