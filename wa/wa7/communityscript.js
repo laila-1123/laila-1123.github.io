@@ -58,52 +58,51 @@ document.addEventListener("keydown", (e) => {
     }
 })
 
-// Save user's theme choice
 function setTheme(theme) {
     localStorage.setItem('userTheme', theme);
     document.body.className = theme;
 }
 
-// Load saved theme on page load
 window.addEventListener('load', function() {
     const savedTheme = localStorage.getItem('userTheme') || 'light';
     document.body.className = savedTheme;
 });
 
-document.getElementById('clear-data').addEventListener('click', () => {
-    localStorage.clear();
-    alert('Data cleared!');
+
+const optOutCheckbox = document.getElementById("opt-out");
+window.addEventListener("load", () => {
+    const expiry = localStorage.getItem("expiry");
+    if (expiry && Date.now () > expiry) {
+        localStorage.clear ();
+    }
+    const savedTheme= localStorage.getItem("userTheme") || "light";
+    document.body.className = savedTheme;
+ 
 });
 
 function setTheme(theme) {
+   if (!optOutCheckbox.checked) {
     const expiry = Date.now() + 100 *60*60*24;
     localStorage.setItem('userTheme', theme);
     localStorage.setItem('expiry', expiry);
     document.body.className = theme;
 }
+document.body.className=theme;
+} 
+  
+document.getElementById('clear-data').addEventListener('click', () => {
+    localStorage.clear();
+    const msg = document.getElementById('clearMsg');
+    msg.style.display = "block" ;
+    setTimeout(() => (msg.style.display = "none"), 3000);
+});
 
-window.addEventListener('load', () => {
-    const expiry = localStorage.getItem('expiry');
-    if (expiry && Date.now () > expiry) {
-        localStorage.clear ();
-    }
-    const savedTheme= localStorage.getItem('userTheme') || 'light';
-    document.body.className = savedTheme;
-})
-
-const optOutCheckbox = document.getElementById("optOutCheckbox");
-optOutCheckbox.checked = localStorage.getItem("optOut") === "true";
 
 optOutCheckbox.addEventListener("change", () => {
     localStorage.setItem("optOut", optOutCheckbox.checked);
     if (optOutCheckbox.checked) {
         localStorage.clear();
+        alert("You've opted out of data storage. Your saved data was cleared.");
     }
 });
 
-function savedTheme (theme) {
-    const optOut = localStorage.getItem("optOut") === "true" ;
-    if (!optOut) {
-        localStorage.setItem("theme", theme);
-    }
-}
