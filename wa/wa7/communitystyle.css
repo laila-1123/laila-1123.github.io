@@ -51,6 +51,12 @@ nav {
   border-bottom: 2px solid #784f41;
 }
 
+.nav-menu a[aria-current="page"] {
+    font-weight: bold;
+    border-bottom: 2px solid #361D2E;
+    text-decoration: none;
+}
+
 .nav-toggle {
     display: none;
     background: none;
