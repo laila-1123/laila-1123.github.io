@@ -337,3 +337,12 @@ body.dark .nav-toggle span {
         flex-direction: row;
     }
 }
+
+.feedback {
+    text-align: center;
+    align-items: center;
+}
+
+.feedback a {
+    color: #361D2E;
+}
