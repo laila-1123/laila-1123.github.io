@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: whitesmoke;
+        }
+        .spin-load {
+           height: 120px;
+           width: 120px;
+           border-radius: 50%; 
+           border: 16px solid lightgrey;
+           border-top: 16px solid plum;
+           animation-name: spin;
+           animation-duration: 2.5s;
+           animation-iteration-count: infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .spin-load {
+                animation: none;
+                border-top-color: #c49ccf;
+            }
+            body::after {
+                content: "Loading...";
+                font-size: 1.2rem;
+                color: #555;
+                margin-left: 12px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="spin-load"></div>
+    
+</body>
+</html>

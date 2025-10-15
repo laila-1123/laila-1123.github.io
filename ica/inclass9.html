@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* .box{
+            height: 200px;
+            width: 200px;
+            border: 5px black solid;
+            background-color: white;
+            animation-name: moving-box;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+            position: relative;
+        } */
+
+        .another-box{
+            height: 200px;
+            width: 200px;
+            border: 5px black solid;
+            background-color: cadetblue;
+            transition-property: width;
+            transition-duration: 0.3s;
+        }
+
+        .another-box:hover{
+            width: 500px;
+        }
+
+
+        @keyframes moving-box {
+            from {
+                top: 0px;
+                left: 0px;
+                background-color: pink;
+            }
+            25%{
+                top: 0px;
+                left: 500px;
+                background-color: rgb(164, 135, 222);
+            }
+            50% {
+                top: 500px;
+                left: 500px;
+                background-color: coral;
+            }
+            75% {
+                top: 500px;
+                left: 0px;
+                background-color: cadetblue;
+            }
+            to {
+                top: 0px;
+                left: 0px;
+                background-color: pink;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="box">
+    </div>
+    <div class="another-box"></div>
+
+
+</body>
+</html>
