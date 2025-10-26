@@ -1,43 +1,128 @@
 body {
-    align-items: center;
+    margin: 0;
+    min-height: 100dvh;
+    align-items: initial;
     text-align: center;
-    background-color: blanchedalmond;
+    background-color: rgb(236, 231, 225);
+    display: block;
 }
 
-header {
-    font-style: bold;
+header, h2 {
+    font-weight: 700;
     font-size: 30px;
     margin: 10px;
+    padding-top: 15px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 button {
-    padding: 10px;
+    padding: 10px 16px;
     margin: 10px;
-    background-color: beige;
-    border-color: brown;
+    height: 50px;
+    background-color: white;
+    border: 2px solid black;
     border-radius: 15px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s
 }
 
-button:hover {
-    background-color: aliceblue;
-}
 
 .app {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
+    max-width: 600px;
+    width: 90%;
+    margin: 24px auto;
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+    padding-bottom: 16px;
 }
 
 img {
     height: 300px;
     width: auto;
     margin: 15px;
+    border: 3px solid black;
+    border-radius: 10px;
+
+}
+
+#fox-image {
+    height: 300px;
+    width: auto;
+    max-width: 90%;
+    border-radius: 10px;
+    border: 3px solid black;
+    margin: 15px auto 1em;
+    display: block;
+}
+
+#favorites {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.fav {
+    position:relative;
+    display: inline-block;
+    border-radius: 10px;
+}
+
+.fav img {
+    height: 150px;
+    width: auto;
+    display: block;
+    border-radius: 10px;
+    border: 2px solid black;
+    transition: transform 0.2s, opacity 0.2s;
+    cursor: pointer;
+}
+
+.fav:hover img {
+    transform: scale(1.05);
+    opacity: 0.5;
+}
+
+.fav::after {
+    content: "remove";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    border-radius: 10px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+}
+
+.fav:hover::after {
+    opacity: 1;
+}
+
+#favBtn {
+    font-size: 20px;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 15px;
+    padding: 6px 12px;
+    line-height: 1;
+    height: 50px;
+}
+
+#favBtn:hover {
+    color: red; 
 }
