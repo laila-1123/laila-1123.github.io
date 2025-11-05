@@ -1,6 +1,3 @@
-const API_KEY = "41e7a1f19f9247239d1070504bd52138"
-const BASE_URL = "https://newsapi.org/v2/top-headlines"
-
 const articlesEL = document.getElementById("articles");
 const statusEL = document.getElementById("status");
 const categorySelect = document.getElementById("categorySelect");
@@ -78,37 +75,18 @@ if (clearPrefsBtn) {
     });
 }
 
-async function fetchNews(category="") {
+async function fetchNews() {
     statusEL.textContent = "Loading news...";
     articlesEL.innerHTML = "";
 
-    const params = new URLSearchParams ({
-        country: "us",
-        apiKey: API_KEY,
-    });
-    if (category) params.append ("category", category);
-
     try {
-        const res = await fetch (`${BASE_URL}?${params.toString()}`);
-        if (!res.ok) throw new Error("Network response was not ok");
-
+        const res = await fetch ("https://api.spaceflightnewsapi.net/v4/articles");
         const data = await res.json();
-
-        if (!data.articles || data.articles.length === 0 ) {
-            statusEL.textContent = "No articles found for this category.";
-            latestArticles = [];
-            renderArticles([], hideImages);
-            return;
-        } 
-        
-        statusEL.textContent = "";
-        latestArticles = data.articles;
+        latestArticles = data.results;
         renderArticles(latestArticles, hideImages);
       } catch (err) {
         console.error(err);
         statusEL.textContent = "Failed to load news. Try again."
-        latestArticles = []
-        renderArticles([], hideImages);
     }
 }
 
@@ -120,16 +98,15 @@ function renderArticles(articles, hideImages = false) {
     
   articlesEL.innerHTML = articles
     .map((article) => {
-      const img = 
-        !hideImages && article.urlToImage
-          ? `<img src="${article.urlToImage}" alt="article image" />`
+      const img = !hideImages && article.image_url
+          ? `<img src="${article.image_url}" alt="article image" />`
           : "";
       return `
         <article class="article">
           ${img}
           <h2><a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a></h2>
           <p>${article.description || ""}</p>
-          <small>${article.source?.name || ""}</small>
+          <small>${article.news_site || ""}</small>
         </article>
       `;
     })
