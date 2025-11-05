@@ -1,5 +1,5 @@
 const API_KEY = "41e7a1f19f9247239d1070504bd52138"
-const BASE_URL = "https://newsapi.org/v2/top-headlines?country=us&apiKey=41e7a1f19f9247239d1070504bd52138"
+const BASE_URL = "https://newsapi.org/v2/top-headlines"
 
 const articlesEL = document.getElementById("articles");
 const statusEL = document.getElementById("status");
@@ -19,6 +19,9 @@ if (rememberFilterCheckbox) {
 const savedCategory = localStorage.getItem("newsCategory");
 if (savedCategory && savedRemember && categorySelect) {
     categorySelect.value = savedCategory;
+    fetchNews(savedCategory);
+}else {
+    fetchNews((categorySelect && categorySelect.value) || "");
 }
  
 
@@ -27,9 +30,6 @@ if (hideImagesCheckbox) {
     hideImagesCheckbox.checked = savedHideImages;
 }
 hideImages = savedHideImages;
-
-
-fetchNews((categorySelect && categorySelect.value) || "");
 
 if (categorySelect) {
     categorySelect.addEventListener("change", () => {
@@ -113,8 +113,8 @@ async function fetchNews(category="") {
 }
 
 function renderArticles(articles, hideImages = false) {
-    if (!atricles || articles.length == 0) {
-        atricles.innerHTML = "";
+    if (!articles || articles.length == 0) {
+        articlesEL.innerHTML = "";
         return;
     }
     
