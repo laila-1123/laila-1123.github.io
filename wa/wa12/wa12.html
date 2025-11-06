@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My News Site</title>
-    <link rel="stylesheet" href="wa11.css">
+    <link rel="stylesheet" href="wa12.css">
 </head>
 <body>
     <header>
         <h1>My News</h1>
-        <div class = "controls">
+    </header> 
+
+     <div id="status" class="status"></div>
+
+    <main class="layout">
+        <aside class="controls">
             <label for="categorySelect" class="small-label">Filter:</label>
                 <select id="categorySelect">
                     <option value="">All</option>
@@ -19,28 +24,35 @@
                     <option value="entertainment">Entertainment</option>
                 </select>
 
-            <label class = "small-label">
-                <input type="checkbox" id="rememberFilter">
-              Remember filter
-            </label>
+               <div class="checkbox">
+                    <label class = "small-label">
+                        <input type="checkbox" id="rememberFilter">
+                    Remember filter
+                    </label>
 
-            <label class="small-label">
-                <input type="checkbox" id="hideImages">
-                Hide images
-            </label>
+                    <label class="small-label">
+                        <input type="checkbox" id="hideImages">
+                        Hide images
+                    </label>
 
-            <button id="clearPrefs" type="button">Clear saved preferences</button>
-        </div>
-    </header> 
+                    <label class="small-label">
+                        <input type="checkbox" id="darkMode">
+                        Dark mode
+                    </label>
+                </div>
 
-    <div id="status" class="status"></div>
-    <p class="privacy-note">
-        We only store your category + view preferences in <strong>this browser</strong>.
-        Nothing is sent to the API except the category you pick.
-    </p>
+            <button id="clearPrefs" type="button">Clear preferences</button>
 
-    <div id="articles" class="articles"></div>
+            <p class="privacy-note">
+            We only store your category + view preferences in <strong>this browser</strong>.
+            Nothing is sent to the API except the category you pick.
+        </p>
+        </aside>
+         
 
-    <script src="wa11.js"></script>
+        <div id="articles" class="articles"></div>
+    </main>
+
+    <script src="wa12.js"></script>
 </body>
 </html>

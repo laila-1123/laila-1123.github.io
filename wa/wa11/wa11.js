@@ -5,6 +5,7 @@ const rememberFilterCheckbox = document.getElementById("rememberFilter");
 const hideImagesCheckbox = document.getElementById("hideImages");
 const clearPrefsBtn = document.getElementById("clearPrefs");
 
+
 let latestArticles = [];
 let hideImages = false;
 

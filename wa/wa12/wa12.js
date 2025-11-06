@@ -4,6 +4,8 @@ const categorySelect = document.getElementById("categorySelect");
 const rememberFilterCheckbox = document.getElementById("rememberFilter");
 const hideImagesCheckbox = document.getElementById("hideImages");
 const clearPrefsBtn = document.getElementById("clearPrefs");
+const darkModeCheckbox = document.getElementById("darkMode");
+
 
 let latestArticles = [];
 let hideImages = false;
@@ -76,7 +78,7 @@ if (clearPrefsBtn) {
 }
 
 async function fetchNews(category = "") {
-    statusEL.textContent = "Loading news...";
+    // statusEL.textContent = "Loading news...";
     articlesEL.innerHTML = "";
 
     try {
@@ -122,4 +124,23 @@ function renderArticles(articles, hideImages = false) {
       `;
     })
     .join("");
+}
+
+const savedDark = localStorage.getItem("darkMode") === "true";
+if (savedDark) {
+  document.body.classList.add("dark");
+}
+if (darkModeCheckbox) {
+  darkModeCheckbox.checked = savedDark;
+}
+if (darkModeCheckbox) {
+  darkModeCheckbox.addEventListener("change", () => {
+    const isDark = darkModeCheckbox.checked;
+    if (isDark) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+    localStorage.setItem("darkMode", isDark);
+  });
 }
