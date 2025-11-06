@@ -96,33 +96,27 @@ async function fetchNews(category = "") {
 }
 
 function renderArticles(articles, hideImages = false) {
-    if (!articles || articles.length == 0) {
-        articlesEL.innerHTML = "";
-        return;
-    }
-    
+  if (!articles || articles.length === 0) {
+    articlesEL.innerHTML = "<p>No articles found.</p>";
+    return;
+  }
+
   articlesEL.innerHTML = articles
     .map((article) => {
-        const altTextParts = [];
+      const shouldShowImg = !hideImages && article.image_url;
+      const img = shouldShowImg
+        ? `<img src="${article.image_url}" alt="">`
+        : "";
 
-        if (article.title) {
-            altTextParts.push(`Image for the article titled "${article.title}"`);
-        }
-
-        if(article.news_site) {
-            altTextParts.push(`published on ${article.news_site}`);
-        }
-
-        const altText = altTextParts.join(" ");
-        
-        const img = !hideImages && article.image_url
-          ? `<img src="${article.image_url}" alt="article image" />`
-          : "";
       return `
         <article class="article">
           ${img}
-          <h2><a href="${article.url}" target="_blank" rel="noopener noreferrer">${article.title}</a></h2>
-          <p>${article.description || ""}</p>
+          <h2>
+            <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+              ${article.title}
+            </a>
+          </h2>
+          <p>${article.summary || article.description || ""}</p>
           <small>${article.news_site || ""}</small>
         </article>
       `;
