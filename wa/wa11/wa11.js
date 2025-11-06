@@ -71,16 +71,21 @@ if (clearPrefsBtn) {
         if (hideImagesCheckbox) hideImagesCheckbox.checked = false;
 
         hideImages = false;
-        statusEL.textContent = "Preferences cleared (stored locally only";
+        statusEL.textContent = "Preferences cleared (stored locally only)";
     });
 }
 
-async function fetchNews() {
+async function fetchNews(category = "") {
     statusEL.textContent = "Loading news...";
     articlesEL.innerHTML = "";
 
     try {
-        const res = await fetch ("https://api.spaceflightnewsapi.net/v4/articles");
+        const baseUrl = "https://api.spaceflightnewsapi.net/v4/articles";
+        const url = category 
+        ? `${baseUrl}?title_contains=${encodeURIComponent(category)}`
+        : baseUrl;
+
+        const res = await fetch(url);
         const data = await res.json();
         latestArticles = data.results;
         renderArticles(latestArticles, hideImages);
@@ -98,7 +103,19 @@ function renderArticles(articles, hideImages = false) {
     
   articlesEL.innerHTML = articles
     .map((article) => {
-      const img = !hideImages && article.image_url
+        const altTextParts = [];
+
+        if (article.title) {
+            altTextParts.push(`Image for the article titled "${article.title}"`);
+        }
+
+        if(article.news_site) {
+            altTextParts.push(`published on ${article.news_site}`);
+        }
+
+        const altText = altTextParts.join(" ");
+        
+        const img = !hideImages && article.image_url
           ? `<img src="${article.image_url}" alt="article image" />`
           : "";
       return `
