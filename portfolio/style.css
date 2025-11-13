@@ -128,12 +128,101 @@ header{
   z-index:10;
 }
 
-.nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:16px;
-  height:64px;
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: opacity 0.2s ease;
+  font-size: 18px;
+}
+
+
+nav a:hover {
+  opacity: 0.7;
+}
+
+/* Hide default list styling */
+nav ul {
+  display: flex;
+}
+
+nav ul li {
+  list-style: none;
+}
+
+/* Center logo */
+.nav-logo img {
+  height: 48px;
+  transition: transform 0.5s ease;
+}
+
+.nav-logo:hover img {
+  transform: rotate(360deg);
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .nav-desktop {
+    width: 100%;
+    max-width: 520px;       
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* equal left and right — PERFECT symmetry */
+    align-items: center;
+    padding-inline: 0;
+    column-gap: 20px;       /* spacing around logo */
+  }
+
+.nav-left,
+.nav-right {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem; /* evenly spaced */
+    flex: 1; /* forces both groups to take the exact same width */
+    padding: 0;
+}
+
+
+  /* Left group aligns right → hugs logo evenly */
+  .nav-left {
+    justify-content: flex-end;
+    margin-right: 1rem;
+  }
+
+  /* Right group aligns left → hugs logo evenly */
+  .nav-right {
+    justify-content: flex-start;
+    margin-left: 1rem;
+  }
+
+  .nav-logo img {
+    height: 40px;
+    width: auto;
+    transition: transform 1s ease;
+  }
+
+  .nav-logo:hover img {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+.container {
+  max-width:1100px;
+  margin-inline:auto;
+  padding:16px 24px;
 }
 
 /* Logo + brand */
@@ -146,13 +235,6 @@ header{
   color:var(--text);
 }
 
-.logo-img{
-  height:32px;
-  width:auto;
-  display:block;
-  object-fit:contain;
-  transition: transform 0.8s ease;
-}
 
 .brand:hover .logo-img {
   transform: rotate(360deg);
@@ -268,6 +350,8 @@ p, li, input, textarea, button, label{
   flex-direction:column;
   gap:12px;
   align-items:center;
+  font-size: 40px;
+  letter-spacing: 1.5px;
 }
 
 /* Large logo in center */
