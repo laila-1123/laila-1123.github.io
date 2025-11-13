@@ -1,0 +1,542 @@
+/* ============================= */
+/*         GLOBAL COLORS         */
+/*   Palette 4 – Forest + Gold   */
+/* ============================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root{
+  /* Dark mode – Rich & Artistic */
+  --bg:#0b0c0b;
+  --panel:#131513;
+  --card:#181a18;
+  --text:#f3efe8;
+  --muted:#b8b6ae;
+
+  --brand:#e4b363;      /* gold */
+  --accent:#6abf8b;     /* sage green */
+  --secondary:#c088f1;  /* soft violet */
+
+  --border:#2a2f2a;
+  --ring:color-mix(in oklab, var(--brand) 30%, transparent);
+  --success:#19c37d;
+  --error:#ff5b5b;
+  --warning:#ffb020;
+}
+
+@media (prefers-color-scheme: light){
+  :root{
+    /* Light mode version */
+    --bg:#f5f2ea;
+    --panel:#ffffff;
+    --card:#f9f4eb;
+    --text:#1e201c;
+    --muted:#6f6b63;
+
+    --brand:#c48b32; 
+    --accent:#4f9470;
+    --secondary:#9b6bd4;
+
+    --border:#ded6c6;
+    --ring:color-mix(in oklab, var(--brand) 30%, transparent);
+    --success:#1f8c5d;
+    --error:#d74444;
+    --warning:#d48a15;
+  }
+}
+
+/* ============================= */
+/*         GLOBAL RESET          */
+/* ============================= */
+
+*{
+  box-sizing:border-box;
+}
+
+html, body{
+  height:100%;
+}
+
+body{
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* Layout helper */
+
+.container{
+  max-width:1100px;
+  margin-inline:auto;
+  padding:24px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+}
+
+/* ============================= */
+/*            BUTTONS            */
+/* ============================= */
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:12px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  color:var(--text);
+  cursor:pointer;
+  text-decoration:none;
+  font-size:0.9rem;
+}
+
+.btn:hover,
+.btn:focus-visible{
+  outline:2px solid var(--ring);
+}
+
+.btn.primary{
+  background:var(--brand);
+  border-color:transparent;
+  color:#000;
+}
+
+.btn.primary:hover,
+.btn.primary:focus-visible{
+  box-shadow:0 0 0 4px var(--ring);
+}
+
+/* ============================= */
+/*            NAVBAR             */
+/* ============================= */
+
+header{
+  position:sticky;
+  top:0;
+  backdrop-filter:blur(8px);
+  background:color-mix(in oklab, var(--bg) 70%, transparent);
+  border-bottom:1px solid var(--border);
+  z-index:10;
+}
+
+.nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  height:64px;
+}
+
+/* Logo + brand */
+
+.brand{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color:var(--text);
+}
+
+.logo-img{
+  height:32px;
+  width:auto;
+  display:block;
+  object-fit:contain;
+  transition: transform 0.8s ease;
+}
+
+.brand:hover .logo-img {
+  transform: rotate(360deg);
+}
+
+/* Nav links */
+
+.nav-links{
+  display:flex;
+  gap:14px;
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.nav-links a{
+  padding:8px 10px;
+  border-radius:10px;
+  color:var(--muted);
+  text-decoration:none;
+  font-size:0.9rem;
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible{
+  background:var(--card);
+  color:var(--text);
+}
+
+.nav-links a.active{
+  border:1px solid var(--border);
+  color:var(--text);
+}
+
+/* Hamburger toggle (hidden on desktop) */
+
+.nav-toggle{
+  display:none;
+  background:none;
+  border:none;
+  padding:6px;
+  border-radius:999px;
+  cursor:pointer;
+}
+
+.nav-toggle span{
+  display:block;
+  width:18px;
+  height:2px;
+  background:var(--text);
+  border-radius:999px;
+  margin:3px 0;
+}
+
+/* ============================= */
+/*          TYPOGRAPHY           */
+/* ============================= */
+
+/* Neue Haas Grotesk Display is loaded via Adobe Fonts in HTML head */
+
+h1, h2, h3, h4, h5, h6{
+  font-family:"neue-haas-grotesk-display", sans-serif;
+  margin:0 0 .5rem;
+  color:var(--text);
+}
+
+h1{
+  font-weight:700;
+  letter-spacing:-0.1px;
+  text-align: center;
+}
+
+h2{
+  font-weight:600;
+  letter-spacing:0px;
+}
+
+h3{
+  font-weight:500;
+  letter-spacing:0.2px;
+}
+
+p, li, input, textarea, button, label{
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size:0.95rem;
+  text-align: center;
+}
+
+.sub{
+  color:var(--muted);
+}
+
+/* Eyebrow label (like Brandon’s site) */
+
+.eyebrow{
+  font-size:0.75rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:var(--muted);
+  margin:0 0 6px;
+}
+
+/* ============================= */
+/*            HEROES             */
+/* ============================= */
+
+/* Full-page home hero */
+
+
+.hero-inner{
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:center;
+}
+
+/* Large logo in center */
+
+.logo-hero{
+  width:120px;
+  height:auto;
+  display:block;
+  margin-bottom:4px;
+  transition:transform 0.9s ease;
+}
+
+.logo-hero:hover{
+  transform:rotate(360deg);
+}
+
+/* Generic hero layout for other pages */
+
+.hero,
+.page-hero{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:32px;
+  align-items:center;
+  padding-block:48px;
+}
+
+.hero-home {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* ============================= */
+/*          WORK LIST            */
+/* ============================= */
+
+/* Text-based work layout (Brandon-style) */
+
+.work-list{
+  display:flex;
+  flex-direction:column;
+  gap:32px;
+  padding-block:32px 48px;
+}
+
+.work-item{
+  border-bottom:1px solid var(--border);
+  padding-bottom:24px;
+}
+
+.work-item:last-child{
+  border-bottom:none;
+}
+
+.work-item h2{
+  font-size:1.4rem;
+  margin-bottom:6px;
+}
+
+.work-summary{
+  margin:0 0 8px;
+  color:var(--muted);
+  max-width:46rem;
+}
+
+.work-link{
+  font-size:0.9rem;
+  text-decoration:none;
+  color:var(--brand);
+}
+
+.work-link:hover{
+  text-decoration:underline;
+}
+
+/* ============================= */
+/*       IMAGES / GRID (if needed) */
+/* ============================= */
+
+.thumb{
+  aspect-ratio:16/10;
+  width:100%;
+  object-fit:cover;
+  border-radius:16px;
+  background:#000;
+  border:1px solid var(--border);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+/* ============================= */
+/*         CONTACT FORM          */
+/* ============================= */
+
+.contact-form{
+  display:grid;
+  gap:14px;
+  padding:18px;
+  --radius:12px;
+  --field-bg:var(--panel);
+}
+
+@media (min-width:780px){
+  .contact-form{
+    grid-template-columns:1fr 1fr;
+  }
+  .contact-form .full{
+    grid-column:1 / -1;
+  }
+}
+
+.contact-form label{
+  display:grid;
+  gap:8px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+.contact-form input,
+.contact-form textarea{
+  width:100%;
+  padding:12px;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  background:var(--field-bg);
+  color:var(--text);
+  outline:none;
+}
+
+.contact-form textarea{
+  min-height:120px;
+  resize:vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus{
+  border-color:var(--brand);
+  box-shadow:0 0 0 4px var(--ring);
+}
+
+.form-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+/* ============================= */
+/*            FOOTER             */
+/* ============================= */
+
+footer{
+  border-top:1px solid var(--border);
+  padding:24px;
+  color:var(--muted);
+  font-size:0.85rem;
+}
+
+/* ============================= */
+/*         RESPONSIVE NAV        */
+/* ============================= */
+
+@media (max-width:900px){
+  .hero,
+  .page-hero{
+    grid-template-columns:1fr;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media (max-width:768px){
+  .nav{
+    position:relative;
+  }
+
+  .nav-toggle{
+    display:inline-flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+  }
+
+  .nav-links{
+    position:absolute;
+    top:100%;
+    right:24px;
+    margin-top:8px;
+    background:var(--panel);
+    border-radius:12px;
+    border:1px solid var(--border);
+    padding:10px 12px;
+    flex-direction:column;
+    gap:6px;
+    display:none; /* hidden by default on mobile */
+  }
+
+  .nav-links.open{
+    display:flex; /* toggled via JS */
+  }
+
+  .nav-links a{
+    display:block;
+  }
+}
+
+@media (max-width:640px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+.footer {
+  margin-top: 64px;
+  padding: 32px 0 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: var(--background); /* your default bg */
+  transition: padding 0.3s ease, background-color 0.3s ease;
+}
+
+/* When someone clicks "Contact" */
+#contact:target {
+  padding: 64px 0 48px; /* slightly larger */
+  background: var(--panel); /* subtle highlight */
+}
+
+/* Icon row */
+.footer-icons {
+  display: flex;
+  gap: 24px;
+}
+
+/* Icons themselves */
+.footer-icon {
+  width: 26px;
+  height: 26px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.icon-link:hover .footer-icon {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+/* Copyright */
+.footer p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.contact-header {
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  margin: 0;
+  color: var(--muted);
+}
