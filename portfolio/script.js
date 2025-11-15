@@ -1,10 +1,16 @@
-// Shared JS: year, active nav (fallback), filters, modal
 document.addEventListener('DOMContentLoaded', () => {
-  // Year in footer
+  /* =============================
+   *   FOOTER YEAR
+   * ============================= */
   const yearEl = document.getElementById('year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
+  }
 
-  // If we're on work.html, set up grid, filters, and modal
+  /* =============================
+   *   WORK PAGE: GRID + MODAL
+   *   (runs only if #projectGrid exists)
+   * ============================= */
   const grid = document.getElementById('projectGrid');
   if (grid) {
     const projects = [
@@ -74,7 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <img class="thumb" src="${p.cover}" alt="${p.title} cover image" loading="lazy" />
         <div class="card-body">
           <h3 class="title">${p.title}</h3>
-          <p class="pill">${p.type.map(t=>`<span>#${t}</span>`).join(' ')} · <span>${p.summary}</span></p>
+          <p class="pill">
+            ${p.type.map(t=>`<span>#${t}</span>`).join(' ')} · 
+            <span>${p.summary}</span>
+          </p>
         </div>`;
       el.tabIndex = 0;
       el.setAttribute('role','button');
@@ -104,20 +113,27 @@ document.addEventListener('DOMContentLoaded', () => {
         <h4>Process</h4>
         <ul>${p.process.map(step=>`<li>${step}</li>`).join('')}</ul>
         <h4>Outcome</h4>
-        <ul>${p.outcome.map(o=>`<li>${o}</li>`).join('')}</ul>`;
+        <ul>${p.outcome.map(o=>`<li>${o}</li>`).join('')}</ul>
+      `;
       modal.showModal();
     }
 
-    if (closeModal) closeModal.addEventListener('click', ()=> modal.close());
+    if (closeModal) {
+      closeModal.addEventListener('click', ()=> modal.close());
+    }
+
     chips.forEach(ch => ch.addEventListener('click', ()=>{
       chips.forEach(c=> c.setAttribute('aria-pressed','false'));
       ch.setAttribute('aria-pressed','true');
       render(ch.dataset.filter);
     }));
+
     render('all');
   }
 
-  // Smooth scroll for "#contact" links in nav
+  /* =============================
+   *   SMOOTH SCROLL TO CONTACT
+   * ============================= */
   document.querySelectorAll('a[href="#contact"]').forEach(a=>{
     a.addEventListener('click', (e)=>{
       e.preventDefault();
@@ -125,19 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
     });
   });
-});
 
-document.addEventListener('DOMContentLoaded', () => {
+  /* =============================
+   *   MOBILE NAV TOGGLE
+   * ============================= */
   const navToggle = document.querySelector('.nav-toggle');
-  const navLinks = document.querySelector('.nav-links');
+  const navMenu = document.querySelector('.nav-menu');
 
-  if (navToggle && navLinks) {
+  if (navToggle && navMenu) {
     navToggle.addEventListener('click', () => {
-      const isOpen = navLinks.classList.toggle('open');
+      const isOpen = navMenu.classList.toggle('open');
       navToggle.setAttribute('aria-expanded', isOpen);
     });
   }
-
-  const yearEl = document.getElementById('year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
 });

@@ -7,53 +7,64 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-      <nav class="container nav-desktop">
-            <ul class="nav-left">
-              <li><a href="work.html">WORK</a></li>
-              <li><a href="about.html">ABOUT</a></li>
-            </ul>
+<header>
+    <nav class="container nav-desktop">
 
-            <a href="index.html" class="nav-logo">
-              <img src="img/logo.png" alt="Laila Bartlett logo">
-            </a>
-          
-          <ul class="nav-right">
-            <li><a href="#contact">CONTACT</a></li>
-            <li><a href="img/Laila.Bartlett.Resume.pdf" target="_blank" rel="noopener noreferrer">RESUME</a></li>
+          <ul class="nav-left">
+            <li><a href="work.html">WORK</a></li>
+            <li><a href="about.html">ABOUT</a></li>
           </ul>
-      </nav>
-  </header>
+
+          <a href="index.html" class="nav-logo">
+            <img src="img/logo.png" alt="Laila Bartlett logo">
+          </a>
+        
+        <ul class="nav-right">
+          <li><a href="#contact">CONTACT</a></li>
+          <li><a href="img/Laila.Bartlett.Resume.pdf" target="_blank" rel="noopener noreferrer">RESUME</a></li>
+        </ul>
+
+        <ul class="nav-menu">
+          <li><a href="work.html">WORK</a></li>
+          <li><a href="about.html">ABOUT</a></li>
+          <li><a href="#contact">CONTACT</a></li>
+          <li><a href="img/Laila.Bartlett.Resume.pdf" target="_blank" rel="noopener noreferrer">RESUME</a></li>
+        </ul>
+        
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+    </nav>
+</header>
 
     <main>
         <section class="page-hero container">
-            <h1>ABOUT</h1>
-            <p class="sub">Designer & creative technologist focused on clear, intuitive interfaces.</p>
+              <div class="page-hero-text">
+                <h1>ABOUT</h1>
+                <p class="sub">Designer & Analyst based in Colorado</p>
+              </div>
         </section>
 
+
+
         <section class="container two-col">
-            <div>
+            <div class="two-col-text">
                 <h2>Hi, I'm Laila</h2>
                 <p>
-                   I’m a designer with a foundation in business analytics who enjoys turning research 
-                   and constraints into simple, effective experiences. I care about clarity, 
-                   systems, and measurable outcomes. 
+                  I’m a third-year student at CU Boulder pursuing a B.S.B.A. in Business Analytics and Information Management 
+                  with a minor in Creative Technology and Design. I design at the intersection of data, creativity, and human experience.
+                  My background in analytics gives me a strong foundation in data management, visualization, and strategic decision-making, 
+                  and I use these skills to inform thoughtful, human-centered design. <br>I believe that great design is about clarity, 
+                  empathy, and understanding the “why” behind people’s behaviors. I focus on creating experiences that feel intuitive, 
+                  purposeful, and human. I’m especially passionate about using design as a form of storytelling and transforming complex 
+                  information into experiences that are accessible, engaging, and meaningful.
                 </p>
-                <ul class="bullets">
-                    <li><strong>Strengths:</strong>interaction design, ethical and accessible design, prototyping, wireframing, UI design.</li>
-                    <li><strong>Tools:</strong>Figma, Adobe Creative Cloud, HTML, CSS, JS, rotoscoping.</li>
-                    <li><strong>Currently:</strong>open to internships and entry level UX/UI roles.</li>
-                </ul>
             </div>
-            <aside class="card">
-                <h3>Quick Facts</h3>
-                <ul class="bullets">
-                    <li> Web, app, and system deisgn</li>
-                    <li> Photography & animation for visual range</li>
-                    <li> Collaborates well with devs & PMs</li>
-                </ul>
-                <a class="btn" href="work.html">View Work</a>
-            </aside>
+            <div class="two-col-image">
+              <img src="img/me.jpeg" alt="Photo of Laila">
+            </div>
         </section>
     </main>
     <footer class="footer" id="contact">
