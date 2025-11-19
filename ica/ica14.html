@@ -1,0 +1,133 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fan Pattern</title>
+  <style>
+    body {
+      margin: 0;
+      background:#111;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+    }
+    canvas { display:block; }
+  </style>
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <script>
+    const BG = "#ffffff";
+
+    // Palette inspired by luxe silk scarves (no brand name in the code)
+    const PALETTE = ['#457B9D', '#A8DADC', '#E63946'];
+
+    let t = 0; // 0 → 1 : closed → fully fanned out
+
+    function setup() {
+      createCanvas(900, 900);
+      pixelDensity(2);
+    }
+
+    function draw() {
+      background(BG);
+
+      // keep the random layout stable each frame
+      randomSeed(1);
+
+      // animate t
+      t += 0.02;
+      if (t > 1) t = 1;
+
+      const baseR   = 70;
+      const rowStep = baseR * 0.65;
+
+      // TOP → BOTTOM so lower rows are drawn last (on top)
+      for (let y = -baseR; y < height + baseR; y += rowStep) {
+        const evenRow   = (Math.round(y / rowStep) % 2 === 0);
+        const rowOffset = evenRow ? 0 : baseR * 0.7;
+
+        for (let x = -baseR * 2; x < width + baseR * 2; x += baseR * 1.2) {
+          const r        = baseR * random(0.75, 1.25);
+          const jitterX  = random(-6, 6);
+          const jitterY  = random(-4, 4);
+
+          // random rotation between -15° and 15°
+          const angleOffset = radians(random(-15, 15));
+
+          push();
+          translate(x + rowOffset + jitterX, y + jitterY);
+          rotate(angleOffset);
+          drawFan(0, 0, r);
+          pop();
+        }
+      }
+
+      if (t === 1) {
+        noLoop();  // stop once all are fully open
+      }
+    }
+
+    function drawFan(cx, cy, rOuter) {
+      // smoothstep easing
+      let tt = t;
+      tt = tt * tt * (3 - 2 * tt);
+
+      const rInner = rOuter * 0.18;
+
+      // LEFT edge fixed, RIGHT edge swings open
+      const startAngle    = radians(205);
+      const endAngleFull  = radians(335);
+      const endAngle      = lerp(startAngle + 0.01, endAngleFull, tt);
+      const span          = endAngle - startAngle;
+
+      const ribs    = 18;
+      const step    = span / ribs;
+      const overlap = 1.08;
+
+      // keep black outline
+      stroke(0);
+      strokeWeight(2);
+      strokeJoin(ROUND);
+      strokeCap(ROUND);
+
+      // one color per fan from the palette
+      const fanColor = random(PALETTE);
+      fill(fanColor);
+
+      for (let i = 0; i < ribs; i++) {
+        const aL = startAngle + i * step;
+        const aR = startAngle + (i + overlap) * step;
+
+        beginShape();
+
+        // inner base
+        const innerSteps = 3;
+        for (let j = 0; j <= innerSteps; j++) {
+          const ft = j / innerSteps;
+          const a  = lerp(aL, aR, ft);
+          vertex(
+            cx + rInner * cos(a),
+            cy + rInner * sin(a)
+          );
+        }
+
+        // outer tips
+        const outerSteps = 6;
+        for (let j = outerSteps; j >= 0; j--) {
+          const ft = j / outerSteps;
+          const a  = lerp(aL, aR, ft);
+          const rr = rOuter * (0.96 + 0.04 * sin(ft * PI));
+          vertex(
+            cx + rr * cos(a),
+            cy + rr * sin(a)
+          );
+        }
+
+        endShape(CLOSE);
+      }
+    }
+  </script>
+</body>
+</html>
