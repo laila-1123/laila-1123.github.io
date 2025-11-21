@@ -49,45 +49,69 @@
 
                 <!-- FEATURED PROJECT -->
         <section class="container project-feature">
-            <div class="project-feature-text">
+          <div class="project-feature-text">
             <h2>Alpha Kappa Psi · Gamma Zeta</h2>
-            <p class="sub">Design Chair · Brand & Visual System · Spring 2025</p>
-
-            <p>
-                Short intro paragraph about the project. Who it was for, what the goal was,
-                and what you were responsible for.
-            </p>
+            <p class="sub">Design Chair · Marketing Committee · Spring 2025</p>
 
             <ul class="project-meta-list">
-                <li><strong>My role:</strong> Design Chair</li>
-                <li><strong>Scope:</strong> Clothing graphics, posters, social media, video</li>
-                <li><strong>Tools:</strong> Figma, Illustrator, Photoshop, Premiere Pro, Canva</li>
+              <li><strong>My role:</strong> Design Chair, Marketing Committee</li>
+              <li><strong>Scope:</strong> Branding/theme (Alpine Retro), merch, social, print, and video</li>
+              <li><strong>Tools:</strong> Canva (primary), Photoshop, Illustrator, Premiere Pro</li>
             </ul>
+
+            <details class="project-intro">
+              <summary class="learn-more">Learn more</summary>
+              <p>
+                As Design Chair for the Gamma Zeta chapter, I built an “alpine retro” visual theme and produced everything for recruitment and the rest of the semester: video, social media graphics, print collateral, and merch.
+              </p>
+            </details>
+          </div>
+
+          <div class="project-feature-gallery">
+            <div class="feature-gallery" id="featureGallery">
+              <button class="feature-shot" data-full="img/hoodie.png" data-caption="Cream hoodie graphic for Alpha Kappa Psi">
+                <img src="img/hoodie.png" alt="Cream hoodie graphic for Alpha Kappa Psi">
+                <span class="feature-shot-tag">Apparel</span>
+              </button>
+
+              <button class="feature-shot" data-full="img/shirt.jpg" data-caption="Pocket tee design for recruitment">
+                <img src="img/shirt.jpg" alt="Pocket tee design for recruitment">
+                <span class="feature-shot-tag">Apparel</span>
+              </button>
+
+              <button class="feature-shot" data-full="img/post1.jpg" data-caption="Recruitment event poster">
+                <img src="img/post1.jpg" alt="Recruitment event poster">
+                <span class="feature-shot-tag">Poster</span>
+              </button>
+
+              <button class="feature-shot" data-full="img/post2.jpg" data-caption="Recruitment event poster">
+                <img src="img/post2.jpg" alt="Recruitment event poster">
+                <span class="feature-shot-tag">Poster</span>
+              </button>
+
+              <button class="feature-shot" data-full="img/post3.png" data-caption="Rush timeline for print and social media">
+                <img src="img/post3.png" alt="Rush timeline for print and social media">
+                <span class="feature-shot-tag">Poster</span>
+              </button>
+
+              <button class="feature-shot feature-shot-video" data-video="img/akpvid.mp4" data-caption="Recruitment hype reel cut for Alpha Kappa Psi">
+                <div class="feature-shot-video-inner">
+                  <span class="feature-play-icon">▶</span>
+                  <p>Recruitment hype reel</p>
+                </div>
+                <span class="feature-shot-tag">Video</span>
+              </button>
             </div>
 
-            <div class="project-feature-gallery">
-            <figure class="design-chair">
-                <img src="img/hoodie.png" alt="Hoodie design" class="thumb thumb-sm">
-                <img src="img/shirt.jpg" alt="Recruitment t-shirt design">
-                <figcaption>Clothing & apparel graphics</figcaption>
-            </figure>
-
-            <figure class="design-chair">
-                <img src="img/post1.jpg" alt="Poster design" class="thumb thumb-sm">
-                <img src="img/post2.png" alt="">
-                <img src="img/post3.png" alt="">
-                <figcaption>Posters & print assets</figcaption>
-            </figure>
-
-            <figure class="design-chair">
-                <img src="img/featured-social-1.jpg" alt="Social media layout" class="thumb thumb-sm">
-                <figcaption>Social media templates</figcaption>
-            </figure>
-
-            <figure class="design-chair">
-                <figcaption>Video / motion stills</figcaption>
-            </figure>
-            </div>
+            <dialog class="feature-lightbox" id="featureLightbox">
+              <button class="feature-lightbox-close" id="featureLightboxClose" aria-label="Close gallery">×</button>
+              <div class="feature-lightbox-media">
+                <img src="" alt="" id="featureLightboxImg">
+                <video id="featureLightboxVideo" controls playsinline></video>
+              </div>
+              <p class="feature-lightbox-caption" id="featureLightboxCaption"></p>
+            </dialog>
+          </div>
         </section>
 
 
