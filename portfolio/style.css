@@ -529,6 +529,60 @@ h2 + .sub {
   border-color: var(--brand);
 }
 
+.flow-list {
+  margin: 16px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+  line-height: 1.6;
+}
+
+.flow-list li {
+  margin: 0;
+}
+
+.wireframe-embed {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 420px;
+  background: var(--panel);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.wireframe-embed iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  border: 0;
+  display: block;
+  background: #0f1115;
+}
+
+.wireframe-embed-link {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg) 60%, var(--panel));
+}
+
+.wireframe-embed-link a {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.9rem;
+  letter-spacing: 0.2px;
+}
+
+.wireframe-embed-link a:hover {
+  text-decoration: underline;
+}
+
 .project-feature-gallery {
   display: flex;
   flex-direction: column;
