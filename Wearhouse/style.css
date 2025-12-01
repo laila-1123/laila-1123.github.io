@@ -45,6 +45,7 @@ section {
   position: sticky;  /* stays at top on scroll */
   top: 0;
   z-index: 20;
+  font-size: 50px;
 }
 
 .nav-link {
@@ -121,6 +122,112 @@ section {
   font-size: 0.7rem;
 }
 
+/* Dashboard */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.dash-card {
+  background: #fff;
+  border-radius: 0.85rem;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0eeea;
+}
+
+.dash-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.dash-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dash-subtext {
+  color: #777;
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+}
+
+.dash-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.dash-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #faf8f5;
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.92rem;
+}
+
+.pill {
+  background: #e8e2ff;
+  color: #43309f;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.chart-card {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.pie {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: #f1eee9;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: inset 0 0 0 10px #fff, 0 10px 30px rgba(0,0,0,0.04);
+  display: grid;
+  place-items: center;
+}
+
+.pie-label {
+  position: absolute;
+  text-align: center;
+  color: #555;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.legend {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
 /* Floating Add (+) Button for all pages */
 .fab {
   position: fixed;
@@ -129,42 +236,50 @@ section {
   background: #333;
   color: #fff;
   border: none;
-  border-radius: 50px;
-  padding: 0.9rem 1.2rem;
-  font-size: 2rem; /* visible + */
+  border-radius: 50%;
+  padding: 0;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   transition: all 0.25s ease;
   overflow: hidden;
   width: 3.5rem;
   height: 3.5rem;
   z-index: 50;
+  line-height: 1;
 }
 
-/* Hidden label initially */
-.fab::after {
-  content: "Add Item";
-  opacity: 0;
-  transform: translateX(10px);
+.fab-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.fab-label {
   white-space: nowrap;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  transform: translateX(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease, max-width 0.25s ease;
   font-size: 1rem;
 }
 
-/* On hover: expand and show label */
 .fab:hover {
-  width: 8.5rem;
+  width: 9rem;
+  padding: 0 1rem;
   justify-content: center;
+  border-radius: 999px;
   background: #000
 }
 
-.fab:hover::after {
+.fab:hover .fab-label {
   opacity: 1;
   transform: translateX(0);
+  max-width: 7rem;
 }
 
 .modal {

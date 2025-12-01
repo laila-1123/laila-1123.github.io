@@ -22,7 +22,6 @@ const itemsList = document.getElementById("items-list");
 // make sure the floating button is visible and says +
 if (addItemBtn) {
   addItemBtn.classList.remove("hidden");
-  addItemBtn.textContent = "+";
 }
 
 // ====== HELPERS ======
@@ -50,7 +49,6 @@ function showApp() {
 
   // show floating +
   addItemBtn.classList.remove("hidden");
-  addItemBtn.textContent = "+";
 }
 
 function showLogin() {
@@ -60,7 +58,6 @@ function showLogin() {
 
   // still show floating +
   addItemBtn.classList.remove("hidden");
-  addItemBtn.textContent = "+";
 }
 
 // ====== AUTH ======
@@ -210,16 +207,154 @@ function renderDashboard() {
 
   const totalItems = items.length;
   const totalWears = items.reduce((sum, item) => sum + (item.wears || 0), 0);
+  const totalInvestment = items.reduce(
+    (sum, item) => sum + (typeof item.price === "number" ? item.price : 0),
+    0
+  );
+
+  const formatCurrency = (value) =>
+    `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  const byMostWorn = [...items]
+    .filter((item) => (item.wears || 0) > 0)
+    .sort((a, b) => (b.wears || 0) - (a.wears || 0))
+    .slice(0, 3);
+
+  const byLeastWorn = [...items]
+    .sort((a, b) => (a.wears || 0) - (b.wears || 0))
+    .slice(0, 3);
+
+  const ppwItems = items
+    .filter((item) => typeof item.price === "number" && (item.wears || 0) > 0)
+    .map((item) => ({
+      ...item,
+      ppw: item.price / (item.wears || 1),
+    }));
+
+  const highestPpw = ppwItems.length
+    ? [...ppwItems].sort((a, b) => b.ppw - a.ppw)[0]
+    : null;
+  const lowestPpw = ppwItems.length
+    ? [...ppwItems].sort((a, b) => a.ppw - b.ppw)[0]
+    : null;
+
+  const categoryCounts = items.reduce((acc, item) => {
+    const cat = item.category || "Other";
+    acc[cat] = (acc[cat] || 0) + 1;
+    return acc;
+  }, {});
+
+  const colors = [
+    "#43309f",
+    "#ff9f1c",
+    "#2ec4b6",
+    "#e56b6f",
+    "#118ab2",
+    "#f25f5c",
+    "#8d99ae",
+  ];
+
+  const categoryEntries = Object.entries(categoryCounts);
+  let start = 0;
+  const pieSegments = categoryEntries.map(([cat, count], idx) => {
+    const percent = totalItems ? Math.round((count / totalItems) * 1000) / 10 : 0;
+    const end = start + (totalItems ? (count / totalItems) * 100 : 0);
+    const color = colors[idx % colors.length];
+    const segment = `${color} ${start}% ${end}%`;
+    start = end;
+    return { cat, count, percent, color, segment };
+  });
+
+  const gradient =
+    pieSegments.length > 0
+      ? `conic-gradient(${pieSegments.map((p) => p.segment).join(", ")})`
+      : "#f1eee9";
+
+  const renderList = (list, emptyText, valueFormatter) => {
+    if (!list.length) return `<p class="dash-subtext">${emptyText}</p>`;
+    return `
+      <ul class="dash-list">
+        ${list
+          .map(
+            (item) => `
+              <li>
+                <span>${item.name}</span>
+                <span class="pill">${valueFormatter(item)}</span>
+              </li>
+            `
+          )
+          .join("")}
+      </ul>
+    `;
+  };
 
   homeStats.innerHTML = `
-    <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-      <div style="background:#fff; padding:1rem; border-radius:0.75rem; flex:1; min-width:200px;">
-        <h3 style="margin-top:0;">Total items</h3>
-        <p style="font-size:1.5rem; font-weight:700;">${totalItems}</p>
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <h3>Total items</h3>
+        <p class="dash-value">${totalItems}</p>
+        <p class="dash-subtext">Everything in your wardrobe. Wears logged: ${totalWears}</p>
       </div>
-      <div style="background:#fff; padding:1rem; border-radius:0.75rem; flex:1; min-width:200px;">
-        <h3 style="margin-top:0;">Total wears</h3>
-        <p style="font-size:1.5rem; font-weight:700;">${totalWears}</p>
+
+      <div class="dash-card">
+        <h3>Total investment</h3>
+        <p class="dash-value">${formatCurrency(totalInvestment)}</p>
+        <p class="dash-subtext">Sum of item prices you've entered.</p>
+      </div>
+
+      <div class="dash-card">
+        <h3>Most worn</h3>
+        ${renderList(byMostWorn, "No wears yet.", (item) => `${item.wears || 0} wears`)}
+      </div>
+
+      <div class="dash-card">
+        <h3>Least worn</h3>
+        ${renderList(byLeastWorn, "Add items to track wears.", (item) => `${item.wears || 0} wears`)}
+      </div>
+
+      <div class="dash-card">
+        <h3>Highest price per wear</h3>
+        ${
+          highestPpw
+            ? `<p class="dash-value">${formatCurrency(highestPpw.ppw)}</p><p class="dash-subtext">${highestPpw.name}</p>`
+            : `<p class="dash-subtext">Need prices and wears to calculate.</p>`
+        }
+      </div>
+
+      <div class="dash-card">
+        <h3>Lowest price per wear</h3>
+        ${
+          lowestPpw
+            ? `<p class="dash-value">${formatCurrency(lowestPpw.ppw)}</p><p class="dash-subtext">${lowestPpw.name}</p>`
+            : `<p class="dash-subtext">Need prices and wears to calculate.</p>`
+        }
+      </div>
+
+      <div class="dash-card chart-card">
+        <div class="pie" style="background: ${gradient};">
+          <div class="pie-label">
+            ${totalItems ? `${totalItems} items` : "No data"}
+          </div>
+        </div>
+        <div>
+          <h3 style="margin-top:0;">Wardrobe by category</h3>
+          <div class="legend">
+            ${
+              pieSegments.length
+                ? pieSegments
+                    .map(
+                      (seg) => `
+                        <div class="legend-row">
+                          <span class="legend-swatch" style="background:${seg.color};"></span>
+                          <span>${seg.cat} (${seg.count}) — ${seg.percent}%</span>
+                        </div>
+                      `
+                    )
+                    .join("")
+                : '<p class="dash-subtext">Add items to see the mix.</p>'
+            }
+          </div>
+        </div>
       </div>
     </div>
   `;
