@@ -125,13 +125,32 @@ section {
   padding: 0.75rem;
   margin-bottom: 0.5rem;
   display: flex;
-  justify-content: space-between;
   gap: 0.75rem;
   align-items: flex-start;
 }
 
-.item-card > div:first-child {
+.item-photo {
+  width: 88px;
+  height: 88px;
+  border-radius: 0.6rem;
+  object-fit: cover;
+  background: #f5f2ed;
+  border: 1px solid #eee;
+  flex-shrink: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.item-card__body {
   flex: 1;
+}
+
+.item-card__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
 }
 
 .badge {
@@ -519,4 +538,119 @@ section {
 .page-auth p {
   margin-bottom: 1.25rem;
   color: #666;
+}
+
+/* Sell box */
+.sell-box {
+  margin-top: 1rem;
+  border: 1px dashed #d8d2c9;
+  border-radius: 0.85rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #fffbf6, #fff);
+  box-shadow: inset 0 0 0 1px #fff;
+}
+
+.sell-box__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.sell-box__subhead {
+  margin: 0.2rem 0 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.sell-box__pill {
+  background: #43309f;
+  color: #fff;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.sell-form {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.sell-form label {
+  font-size: 0.9rem;
+  color: #444;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.sell-form select,
+.sell-form input {
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d8d2c9;
+}
+
+.sell-form__row {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.sell-form__field {
+  flex: 1;
+  min-width: 180px;
+}
+
+.sell-form button {
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 0.6rem;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+}
+
+.sell-hint {
+  margin: 0;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.sell-list {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.sell-card {
+  border: 1px solid #e5dfd7;
+  border-radius: 0.7rem;
+  padding: 0.65rem 0.75rem;
+  background: #fffaf4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.sell-card__meta {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 0.2rem;
+}
+
+.sell-card button {
+  background: #f8f5f1;
+  border: 1px solid #e0ddd7;
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.sell-card button:hover {
+  background: #f0ede7;
 }

@@ -24,6 +24,11 @@ const closetNavLink = document.querySelector('.nav-link[data-page="closet"]');
 const filterCategory = document.getElementById("filter-category");
 const filterSubcategory = document.getElementById("filter-subcategory");
 const filterColor = document.getElementById("filter-color");
+const itemPhotoInput = document.getElementById("item-photo");
+const sellForm = document.getElementById("sell-form");
+const sellSelect = document.getElementById("sell-item");
+const sellPriceInput = document.getElementById("sell-price");
+const sellListEl = document.getElementById("sell-list");
 
 // make sure the floating button is visible and says +
 if (addItemBtn) {
@@ -44,6 +49,36 @@ function toTitleCase(str) {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+const PLACEHOLDER_SVGS = {
+  // Inspired by common line icon styles; using simple strokes for clarity.
+  tops: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16l8-6 6 4 6-4 8 6-6 8v24H24V24z"/><path d="M32 14v10"/></g></svg>`,
+  bottoms: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h20l-2 14 2 26h-8l-2-16-2 16h-8l2-26z"/><path d="M32 26l6-4"/></g></svg>`,
+  shoes: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M12 36l8-10 10 8 12 3 10 4v9H12z"/></svg>`,
+  outerwear: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 14l8-4h4l8 4 4 10v28H18V24z"/><path d="M22 24l-6 8v24"/><path d="M42 24l6 8v24"/><path d="M32 10v10"/></g></svg>`,
+  dresses: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M26 10h12l-2 8 8 10-8 24H24l-8-24 8-10z"/><path d="M28 22h8"/></g></svg>`,
+  accessories: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="22" width="32" height="26" rx="4"/><path d="M24 22c0-6 4-10 8-10s8 4 8 10"/></g></svg>`,
+  other: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M32 8l10 14H22z"/><path d="M22 22h20v24H22z"/><path d="M22 30h20"/></g></svg>`
+};
+
+function svgToDataUrl(svg) {
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+function getPlaceholderForCategory(category) {
+  const key = (category || "other").toString().toLowerCase();
+  const svg = PLACEHOLDER_SVGS[key] || PLACEHOLDER_SVGS.other;
+  return svgToDataUrl(svg);
+}
+
 function saveUsers() {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
@@ -54,10 +89,15 @@ function getCurrentUserData() {
     users[currentUser] = {
       password: "",
       items: [],
-      outfits: []
+      outfits: [],
+      sellList: []
     };
   }
-  return users[currentUser];
+  const data = users[currentUser];
+  if (!Array.isArray(data.items)) data.items = [];
+  if (!Array.isArray(data.outfits)) data.outfits = [];
+  if (!Array.isArray(data.sellList)) data.sellList = [];
+  return data;
 }
 
 // ====== SHOW / HIDE APP ======
@@ -92,7 +132,8 @@ if (loginForm) {
       users[username] = {
         password: password,
         items: [],
-        outfits: []
+        outfits: [],
+        sellList: []
       };
     } else {
       if (users[username].password !== password) {
@@ -119,19 +160,23 @@ let filters = {
   subcategory: "",
   color: "",
 };
+let sellList = [];
 
 function loadUserData() {
   const data = getCurrentUserData();
   if (!data) {
     items = [];
     outfits = [];
+    sellList = [];
   } else {
     items = data.items || [];
     outfits = data.outfits || [];
+    sellList = data.sellList || [];
   }
   renderItems();
   renderDashboard();
   renderOutfits();
+  renderSellBox();
 }
 
 function saveItemsForUser() {
@@ -143,6 +188,12 @@ function saveItemsForUser() {
 function saveOutfitsForUser() {
   if (!currentUser) return;
   users[currentUser].outfits = outfits;
+  saveUsers();
+}
+
+function saveSellListForUser() {
+  if (!currentUser) return;
+  users[currentUser].sellList = sellList;
   saveUsers();
 }
 
@@ -164,6 +215,7 @@ function startAddMode() {
     document.getElementById("item-condition").value = "new";
     const wearsInput = document.getElementById("item-wears");
     if (wearsInput) wearsInput.value = 0;
+    if (itemPhotoInput) itemPhotoInput.value = "";
   }
   if (itemFormTitle) itemFormTitle.textContent = "Add an item";
   if (itemFormSubmit) itemFormSubmit.textContent = "Add item";
@@ -229,30 +281,40 @@ function renderItems() {
     const ppw = item.price && wears > 0 ? (item.price / wears).toFixed(2) : null;
     const conditionLabel = item.condition === "secondhand" ? "Secondhand" : "Bought new";
 
+    const placeholder = getPlaceholderForCategory(item.category);
+    const photoHtml = item.imageData
+      ? `<img class="item-photo" src="${item.imageData}" alt="${toTitleCase(item.name)}">`
+      : `<div class="item-photo" aria-hidden="true" style="background-image:url('${placeholder}');"></div>`;
+
     div.innerHTML = `
-      <div>
-        <strong>${toTitleCase(item.name)}</strong>
-        <div style="font-size: 0.8rem; color: #666;">
-          ${toTitleCase(item.category) || ""}${item.subcategory ? " • " + toTitleCase(item.subcategory) : ""}${item.brand ? " • " + toTitleCase(item.brand) : ""}
-        </div>
-        <div style="font-size: 0.8rem; color: #666;">
-          ${toTitleCase(item.color) || ""}${item.price ? " • $" + item.price : ""}
-        </div>
-        <div style="font-size: 0.75rem; margin-top: 4px;">
-          Condition: ${conditionLabel}
-        </div>
-        <div style="font-size: 0.75rem; margin-top: 4px;">
-          Wears: ${wears} ${ppw ? "• PPW: $" + ppw : ""}
-        </div>
-      </div>
-      <div class="item-actions">
-        <button data-id="${item.id}" class="wear-btn primary">Wore it</button>
-        <div class="item-menu">
-          <button class="item-menu-toggle" aria-label="More options" aria-expanded="false">⋯</button>
-          <div class="item-menu-options hidden">
-            <button data-id="${item.id}" class="set-wears-btn">Set wears</button>
-            <button data-id="${item.id}" class="edit-btn">Edit</button>
-            <button data-id="${item.id}" class="delete-btn danger">Delete</button>
+      ${photoHtml}
+      <div class="item-card__body">
+        <div class="item-card__top">
+          <div>
+            <strong>${toTitleCase(item.name)}</strong>
+            <div style="font-size: 0.8rem; color: #666;">
+              ${toTitleCase(item.category) || ""}${item.subcategory ? " • " + toTitleCase(item.subcategory) : ""}${item.brand ? " • " + toTitleCase(item.brand) : ""}
+            </div>
+            <div style="font-size: 0.8rem; color: #666;">
+              ${toTitleCase(item.color) || ""}${item.price ? " • $" + item.price : ""}
+            </div>
+            <div style="font-size: 0.75rem; margin-top: 4px;">
+              Condition: ${conditionLabel}
+            </div>
+            <div style="font-size: 0.75rem; margin-top: 4px;">
+              Wears: ${wears} ${ppw ? "• PPW: $" + ppw : ""}
+            </div>
+          </div>
+          <div class="item-actions">
+            <button data-id="${item.id}" class="wear-btn primary">Wore it</button>
+            <div class="item-menu">
+              <button class="item-menu-toggle" aria-label="More options" aria-expanded="false">⋯</button>
+              <div class="item-menu-options hidden">
+                <button data-id="${item.id}" class="set-wears-btn">Set wears</button>
+                <button data-id="${item.id}" class="edit-btn">Edit</button>
+                <button data-id="${item.id}" class="delete-btn danger">Delete</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -298,6 +360,78 @@ function renderItems() {
         menu.classList.remove("hidden");
         btn.setAttribute("aria-expanded", "true");
       }
+    });
+  });
+
+  renderSellBox();
+}
+
+// Sell list UI for closet
+function renderSellBox() {
+  if (!sellSelect || !sellListEl) return;
+
+  const alreadySelling = new Set(sellList.map((entry) => entry.itemId));
+  const availableItems = items.filter((item) => !alreadySelling.has(item.id));
+  const previousSelection = sellSelect.value;
+
+  sellSelect.innerHTML = `<option value="">Select an item</option>`;
+  availableItems.forEach((item) => {
+    const option = document.createElement("option");
+    option.value = item.id;
+    option.textContent = toTitleCase(item.name || "Untitled item");
+    sellSelect.appendChild(option);
+  });
+
+  if (availableItems.some((item) => item.id === previousSelection)) {
+    sellSelect.value = previousSelection;
+  } else {
+    sellSelect.value = "";
+  }
+
+  sellSelect.disabled = availableItems.length === 0;
+  if (sellPriceInput) sellPriceInput.disabled = availableItems.length === 0;
+
+  if (sellList.length === 0) {
+    const emptyMsg =
+      items.length === 0
+        ? "Add items to your closet to start a sell list."
+        : "Nothing on your sell list yet.";
+    sellListEl.innerHTML = `<p class="dash-subtext" style="margin:0;">${emptyMsg}</p>`;
+    return;
+  }
+
+  const formatPrice = (value) => {
+    const num = parseFloat(value);
+    if (Number.isNaN(num)) return "";
+    return `$${num.toFixed(2)}`;
+  };
+
+  sellListEl.innerHTML = sellList
+    .map((entry) => {
+      const item = items.find((i) => i.id === entry.itemId);
+      const name = item ? toTitleCase(item.name) : "Item not in closet";
+      const details = item
+        ? [toTitleCase(item.category), toTitleCase(item.color)].filter(Boolean).join(" • ")
+        : "Removed from closet";
+      const priceText = entry.price ? ` • Target ${formatPrice(entry.price)}` : "";
+      return `
+        <div class="sell-card">
+          <div>
+            <strong>${name}</strong>
+            <div class="sell-card__meta">${details}${priceText}</div>
+          </div>
+          <button class="sell-remove-btn" data-item-id="${entry.itemId}">Remove</button>
+        </div>
+      `;
+    })
+    .join("");
+
+  sellListEl.querySelectorAll(".sell-remove-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-item-id");
+      sellList = sellList.filter((entry) => entry.itemId !== id);
+      saveSellListForUser();
+      renderSellBox();
     });
   });
 }
@@ -589,6 +723,7 @@ function startEditItem(id) {
   const wearsInput = document.getElementById("item-wears");
   if (wearsInput) wearsInput.value = item.wears || 0;
   document.getElementById("item-condition").value = item.condition || "new";
+  if (itemPhotoInput) itemPhotoInput.value = "";
   openAddItemModal();
 }
 
@@ -598,9 +733,13 @@ function deleteItem(id) {
   const confirmDelete = confirm(`Delete "${item.name}" from your closet?`);
   if (!confirmDelete) return;
   items = items.filter((i) => i.id !== id);
+  // also drop from sell list so the box stays in sync
+  sellList = sellList.filter((entry) => entry.itemId !== id);
   saveItemsForUser();
+  saveSellListForUser();
   renderItems();
   renderDashboard();
+  renderSellBox();
 }
 
 function closeAllMenus() {
@@ -677,9 +816,33 @@ if (filterCategory) filterCategory.addEventListener("change", handleFilterChange
 if (filterSubcategory) filterSubcategory.addEventListener("change", handleFilterChange);
 if (filterColor) filterColor.addEventListener("change", handleFilterChange);
 
+// ====== SELL LIST ======
+if (sellForm) {
+  sellForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const selectedId = sellSelect ? sellSelect.value : "";
+    if (!selectedId) return;
+
+    const priceRaw = sellPriceInput ? sellPriceInput.value.trim() : "";
+    const price = priceRaw ? parseFloat(priceRaw) : null;
+    if (priceRaw && Number.isNaN(price)) {
+      alert("Enter a valid price or leave it blank.");
+      return;
+    }
+
+    // Prevent duplicates; update price if they re-add
+    sellList = sellList.filter((entry) => entry.itemId !== selectedId);
+    sellList.push({ itemId: selectedId, price: price });
+    saveSellListForUser();
+    if (sellPriceInput) sellPriceInput.value = "";
+    if (sellSelect) sellSelect.value = "";
+    renderSellBox();
+  });
+}
+
 // ====== FORM SUBMIT ======
 if (itemForm) {
-  itemForm.addEventListener("submit", (e) => {
+  itemForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const name = document.getElementById("item-name").value.trim();
@@ -690,17 +853,30 @@ if (itemForm) {
     const priceRaw = document.getElementById("item-price").value;
     const wearsRaw = document.getElementById("item-wears").value;
     const condition = document.getElementById("item-condition").value;
+    const photoFile = itemPhotoInput ? itemPhotoInput.files[0] : null;
 
     if (!name || !color) return;
 
     const price = priceRaw ? parseFloat(priceRaw) : null;
     const wearsValue = wearsRaw ? parseInt(wearsRaw, 10) : 0;
     const wears = Number.isNaN(wearsValue) || wearsValue < 0 ? 0 : wearsValue;
+    const existing = editingItemId ? items.find((i) => i.id === editingItemId) : null;
+
+    let imageData = existing ? existing.imageData || null : null;
+    if (photoFile) {
+      try {
+        imageData = await readFileAsDataUrl(photoFile);
+      } catch (err) {
+        console.error("Could not read file", err);
+        alert("Could not read that photo. Please try another image.");
+        return;
+      }
+    }
 
     if (editingItemId) {
       items = items.map((item) =>
         item.id === editingItemId
-          ? { ...item, name, category, subcategory, brand, color, price, condition, wears }
+          ? { ...item, name, category, subcategory, brand, color, price, condition, wears, imageData }
           : item
       );
     } else {
@@ -714,6 +890,7 @@ if (itemForm) {
         price,
         condition,
         wears,
+        imageData,
       };
       items.push(newItem);
     }
@@ -726,6 +903,7 @@ if (itemForm) {
     document.getElementById("item-condition").value = "new";
     const wearsInput = document.getElementById("item-wears");
     if (wearsInput) wearsInput.value = 0;
+    if (itemPhotoInput) itemPhotoInput.value = "";
     editingItemId = null;
     if (itemFormTitle) itemFormTitle.textContent = "Add an item";
     if (itemFormSubmit) itemFormSubmit.textContent = "Add item";
