@@ -17,7 +17,13 @@ const pages = document.querySelectorAll(".page-section");
 const addItemModal = document.getElementById("add-item-modal");
 const closeModalBtn = document.getElementById("close-modal-btn");
 const itemForm = document.getElementById("item-form");
+const itemFormTitle = document.getElementById("item-form-title");
+const itemFormSubmit = document.getElementById("item-form-submit");
 const itemsList = document.getElementById("items-list");
+const closetNavLink = document.querySelector('.nav-link[data-page="closet"]');
+const filterCategory = document.getElementById("filter-category");
+const filterSubcategory = document.getElementById("filter-subcategory");
+const filterColor = document.getElementById("filter-color");
 
 // make sure the floating button is visible and says +
 if (addItemBtn) {
@@ -25,6 +31,19 @@ if (addItemBtn) {
 }
 
 // ====== HELPERS ======
+function generateId() {
+  const cryptoObj = typeof crypto !== "undefined" ? crypto : null;
+  if (cryptoObj && cryptoObj.randomUUID) return cryptoObj.randomUUID();
+  return `item-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+}
+
+function toTitleCase(str) {
+  return (str || "")
+    .toString()
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 function saveUsers() {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
@@ -94,6 +113,12 @@ if (loginForm) {
 // ====== STATE ======
 let items = [];
 let outfits = [];
+let editingItemId = null;
+let filters = {
+  category: "",
+  subcategory: "",
+  color: "",
+};
 
 function loadUserData() {
   const data = getCurrentUserData();
@@ -128,27 +153,54 @@ function openAddItemModal() {
 }
 function closeAddItemModal() {
   addItemModal.classList.add("hidden");
+  startAddMode();
 }
 
-addItemBtn.addEventListener("click", openAddItemModal);
+function startAddMode() {
+  editingItemId = null;
+  if (itemForm) {
+    itemForm.reset();
+    document.getElementById("item-category").value = "tops";
+    document.getElementById("item-condition").value = "new";
+    const wearsInput = document.getElementById("item-wears");
+    if (wearsInput) wearsInput.value = 0;
+  }
+  if (itemFormTitle) itemFormTitle.textContent = "Add an item";
+  if (itemFormSubmit) itemFormSubmit.textContent = "Add item";
+}
+
+function handleAddItemClick() {
+  startAddMode();
+  openAddItemModal();
+}
+
+addItemBtn.addEventListener("click", handleAddItemClick);
 closeModalBtn.addEventListener("click", closeAddItemModal);
 addItemModal.addEventListener("click", (e) => {
   if (e.target === addItemModal) closeAddItemModal();
 });
 
 // ====== NAV ======
+function showPage(target) {
+  navLinks.forEach((link) => {
+    const page = link.getAttribute("data-page");
+    if (page === target) link.classList.add("active");
+    else link.classList.remove("active");
+  });
+
+  pages.forEach((page) => {
+    if (page.id === target) page.classList.remove("hidden");
+    else page.classList.add("hidden");
+  });
+
+  if (target === "closet") renderItems();
+  if (target === "home") renderDashboard();
+}
+
 navLinks.forEach((link) => {
   link.addEventListener("click", () => {
     const target = link.getAttribute("data-page");
-
-    navLinks.forEach((l) => l.classList.remove("active"));
-    link.classList.add("active");
-
-    pages.forEach((page) => {
-      if (page.id === target) page.classList.remove("hidden");
-      else page.classList.add("hidden");
-    });
-
+    showPage(target);
     // button stays floating + on all pages now
   });
 });
@@ -156,14 +208,20 @@ navLinks.forEach((link) => {
 // ====== RENDER: CLOSET ======
 function renderItems() {
   if (!itemsList) return;
+  updateFilterOptions();
+  const filteredItems = getFilteredItems();
   itemsList.innerHTML = "";
 
-  if (items.length === 0) {
-    itemsList.innerHTML = "<p>Your closet is empty. Add your first item 👚</p>";
+  if (filteredItems.length === 0) {
+    const emptyMsg =
+      items.length === 0
+        ? "Your closet is empty. Add your first item 👚"
+        : "No items match these filters.";
+    itemsList.innerHTML = `<p>${emptyMsg}</p>`;
     return;
   }
 
-  items.forEach((item) => {
+    filteredItems.forEach((item) => {
     const div = document.createElement("div");
     div.className = "item-card";
 
@@ -173,12 +231,12 @@ function renderItems() {
 
     div.innerHTML = `
       <div>
-        <strong>${item.name}</strong>
+        <strong>${toTitleCase(item.name)}</strong>
         <div style="font-size: 0.8rem; color: #666;">
-          ${item.category || ""}${item.subcategory ? " • " + item.subcategory : ""}${item.brand ? " • " + item.brand : ""}
+          ${toTitleCase(item.category) || ""}${item.subcategory ? " • " + toTitleCase(item.subcategory) : ""}${item.brand ? " • " + toTitleCase(item.brand) : ""}
         </div>
         <div style="font-size: 0.8rem; color: #666;">
-          ${item.color || ""}${item.price ? " • $" + item.price : ""}
+          ${toTitleCase(item.color) || ""}${item.price ? " • $" + item.price : ""}
         </div>
         <div style="font-size: 0.75rem; margin-top: 4px;">
           Condition: ${conditionLabel}
@@ -187,7 +245,17 @@ function renderItems() {
           Wears: ${wears} ${ppw ? "• PPW: $" + ppw : ""}
         </div>
       </div>
-      <button data-id="${item.id}" class="wear-btn">Wore it</button>
+      <div class="item-actions">
+        <button data-id="${item.id}" class="wear-btn primary">Wore it</button>
+        <div class="item-menu">
+          <button class="item-menu-toggle" aria-label="More options" aria-expanded="false">⋯</button>
+          <div class="item-menu-options hidden">
+            <button data-id="${item.id}" class="set-wears-btn">Set wears</button>
+            <button data-id="${item.id}" class="edit-btn">Edit</button>
+            <button data-id="${item.id}" class="delete-btn danger">Delete</button>
+          </div>
+        </div>
+      </div>
     `;
     itemsList.appendChild(div);
   });
@@ -196,6 +264,40 @@ function renderItems() {
     btn.addEventListener("click", () => {
       const id = btn.getAttribute("data-id");
       incrementWear(id);
+    });
+  });
+
+  document.querySelectorAll(".set-wears-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-id");
+      setWears(id);
+    });
+  });
+
+  document.querySelectorAll(".edit-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-id");
+      startEditItem(id);
+    });
+  });
+
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-id");
+      deleteItem(id);
+    });
+  });
+
+  document.querySelectorAll(".item-menu-toggle").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const menu = btn.nextElementSibling;
+      const isOpen = menu && !menu.classList.contains("hidden");
+      closeAllMenus();
+      if (menu && !isOpen) {
+        menu.classList.remove("hidden");
+        btn.setAttribute("aria-expanded", "true");
+      }
     });
   });
 }
@@ -225,7 +327,7 @@ function renderDashboard() {
     .slice(0, 3);
 
   const ppwItems = items
-    .filter((item) => typeof item.price === "number" && (item.wears || 0) > 0)
+    .filter((item) => typeof item.price === "number" && item.price > 0 && (item.wears || 0) > 0)
     .map((item) => ({
       ...item,
       ppw: item.price / (item.wears || 1),
@@ -238,11 +340,25 @@ function renderDashboard() {
     ? [...ppwItems].sort((a, b) => a.ppw - b.ppw)[0]
     : null;
 
+  const normalizeCategoryKey = (value) =>
+    value && value.toString().trim().length ? value.toString().trim().toLowerCase() : "other";
+
   const categoryCounts = items.reduce((acc, item) => {
-    const cat = item.category || "Other";
-    acc[cat] = (acc[cat] || 0) + 1;
+    const key = normalizeCategoryKey(item.category || "Other");
+    const label = key ? toTitleCase(key) : "Other";
+    if (!acc[key]) acc[key] = { count: 0, label };
+    acc[key].count += 1;
     return acc;
   }, {});
+
+  const conditionCounts = items.reduce(
+    (acc, item) => {
+      const label = item.condition === "secondhand" ? "Secondhand" : "Bought new";
+      acc[label] = (acc[label] || 0) + 1;
+      return acc;
+    },
+    { "Bought new": 0, Secondhand: 0 }
+  );
 
   const colors = [
     "#43309f",
@@ -254,21 +370,57 @@ function renderDashboard() {
     "#8d99ae",
   ];
 
-  const categoryEntries = Object.entries(categoryCounts);
+  const categoryEntries = Object.values(categoryCounts);
   let start = 0;
-  const pieSegments = categoryEntries.map(([cat, count], idx) => {
-    const percent = totalItems ? Math.round((count / totalItems) * 1000) / 10 : 0;
-    const end = start + (totalItems ? (count / totalItems) * 100 : 0);
+  const pieSegments = categoryEntries.map((entry, idx) => {
+    const percent = totalItems ? Math.round((entry.count / totalItems) * 1000) / 10 : 0;
+    const end = start + (totalItems ? (entry.count / totalItems) * 100 : 0);
     const color = colors[idx % colors.length];
     const segment = `${color} ${start}% ${end}%`;
     start = end;
-    return { cat, count, percent, color, segment };
+    return { cat: entry.label, count: entry.count, percent, color, segment };
   });
 
   const gradient =
     pieSegments.length > 0
       ? `conic-gradient(${pieSegments.map((p) => p.segment).join(", ")})`
       : "#f1eee9";
+
+  // new vs secondhand chart
+  const conditionEntries = Object.entries(conditionCounts);
+  let condStart = 0;
+  const conditionColors = ["#43309f", "#ff9f1c"];
+  const conditionSegments = conditionEntries.map(([label, count], idx) => {
+    const percent = totalItems ? Math.round((count / totalItems) * 1000) / 10 : 0;
+    const end = condStart + (totalItems ? (count / totalItems) * 100 : 0);
+    const color = conditionColors[idx % conditionColors.length];
+    const segment = `${color} ${condStart}% ${end}%`;
+    condStart = end;
+    return { label, count, percent, color, segment };
+  });
+
+  const conditionGradient =
+    conditionSegments.length > 0
+      ? `conic-gradient(${conditionSegments.map((p) => p.segment).join(", ")})`
+      : "#f1eee9";
+
+  const renderHoverLabels = (segments, labelFormatter, emptyText) => {
+    if (!segments.length) return `<p class="dash-subtext" style="margin:0;">${emptyText}</p>`;
+    return `
+      <ul class="hover-list">
+        ${segments
+          .map(
+            (seg) => `
+              <li>
+                <span class="hover-swatch" style="background:${seg.color};"></span>
+                <span>${labelFormatter(seg)}</span>
+              </li>
+            `
+          )
+          .join("")}
+      </ul>
+    `;
+  };
 
   const renderList = (list, emptyText, valueFormatter) => {
     if (!list.length) return `<p class="dash-subtext">${emptyText}</p>`;
@@ -278,7 +430,7 @@ function renderDashboard() {
           .map(
             (item) => `
               <li>
-                <span>${item.name}</span>
+                <span>${toTitleCase(item.name)}</span>
                 <span class="pill">${valueFormatter(item)}</span>
               </li>
             `
@@ -316,7 +468,7 @@ function renderDashboard() {
         <h3>Highest price per wear</h3>
         ${
           highestPpw
-            ? `<p class="dash-value">${formatCurrency(highestPpw.ppw)}</p><p class="dash-subtext">${highestPpw.name}</p>`
+            ? `<p class="dash-value">${formatCurrency(highestPpw.ppw)}</p><p class="dash-subtext">${toTitleCase(highestPpw.name)}</p>`
             : `<p class="dash-subtext">Need prices and wears to calculate.</p>`
         }
       </div>
@@ -325,34 +477,39 @@ function renderDashboard() {
         <h3>Lowest price per wear</h3>
         ${
           lowestPpw
-            ? `<p class="dash-value">${formatCurrency(lowestPpw.ppw)}</p><p class="dash-subtext">${lowestPpw.name}</p>`
+            ? `<p class="dash-value">${formatCurrency(lowestPpw.ppw)}</p><p class="dash-subtext">${toTitleCase(lowestPpw.name)}</p>`
             : `<p class="dash-subtext">Need prices and wears to calculate.</p>`
         }
       </div>
 
       <div class="dash-card chart-card">
-        <div class="pie" style="background: ${gradient};">
-          <div class="pie-label">
-            ${totalItems ? `${totalItems} items` : "No data"}
+        <div>
+          <h3 style="margin:0 0 0.5rem;">New vs secondhand</h3>
+        </div>
+        <div class="chart-hover-wrap">
+          <div class="pie" style="background: ${conditionGradient};"></div>
+          <div class="pie-hover-labels">
+            ${renderHoverLabels(
+              conditionSegments,
+              (seg) => `${seg.label} (${seg.count}) — ${seg.percent}%`,
+              "Add condition info to see the mix."
+            )}
           </div>
         </div>
+      </div>
+
+      <div class="dash-card chart-card">
         <div>
-          <h3 style="margin-top:0;">Wardrobe by category</h3>
-          <div class="legend">
-            ${
-              pieSegments.length
-                ? pieSegments
-                    .map(
-                      (seg) => `
-                        <div class="legend-row">
-                          <span class="legend-swatch" style="background:${seg.color};"></span>
-                          <span>${seg.cat} (${seg.count}) — ${seg.percent}%</span>
-                        </div>
-                      `
-                    )
-                    .join("")
-                : '<p class="dash-subtext">Add items to see the mix.</p>'
-            }
+          <h3 style="margin:0 0 0.5rem;">Wardrobe by category</h3>
+        </div>
+        <div class="chart-hover-wrap">
+          <div class="pie" style="background: ${gradient};"></div>
+          <div class="pie-hover-labels">
+            ${renderHoverLabels(
+              pieSegments,
+              (seg) => `${toTitleCase(seg.cat)} (${seg.count}) — ${seg.percent}%`,
+              "Add items to see the mix."
+            )}
           </div>
         </div>
       </div>
@@ -377,7 +534,7 @@ function renderOutfits() {
     div.className = "item-card";
     div.innerHTML = `
       <div>
-        <strong>${outfit.name}</strong>
+        <strong>${toTitleCase(outfit.name)}</strong>
         <div style="font-size:.8rem; color:#666;">
           Items: ${outfit.itemIds.length}
         </div>
@@ -401,6 +558,125 @@ function incrementWear(id) {
   renderDashboard();
 }
 
+function setWears(id) {
+  const item = items.find((i) => i.id === id);
+  if (!item) return;
+  const input = prompt("Set wears to:", item.wears || 0);
+  if (input === null) return;
+  const value = parseInt(input, 10);
+  if (Number.isNaN(value) || value < 0) {
+    alert("Please enter a valid non-negative number.");
+    return;
+  }
+  items = items.map((i) => (i.id === id ? { ...i, wears: value } : i));
+  saveItemsForUser();
+  renderItems();
+  renderDashboard();
+}
+
+function startEditItem(id) {
+  const item = items.find((i) => i.id === id);
+  if (!item) return;
+  editingItemId = id;
+  if (itemFormTitle) itemFormTitle.textContent = "Edit item";
+  if (itemFormSubmit) itemFormSubmit.textContent = "Save changes";
+  document.getElementById("item-name").value = item.name || "";
+  document.getElementById("item-category").value = item.category || "tops";
+  document.getElementById("item-subcategory").value = item.subcategory || "";
+  document.getElementById("item-brand").value = item.brand || "";
+  document.getElementById("item-color").value = item.color || "";
+  document.getElementById("item-price").value = item.price ?? "";
+  const wearsInput = document.getElementById("item-wears");
+  if (wearsInput) wearsInput.value = item.wears || 0;
+  document.getElementById("item-condition").value = item.condition || "new";
+  openAddItemModal();
+}
+
+function deleteItem(id) {
+  const item = items.find((i) => i.id === id);
+  if (!item) return;
+  const confirmDelete = confirm(`Delete "${item.name}" from your closet?`);
+  if (!confirmDelete) return;
+  items = items.filter((i) => i.id !== id);
+  saveItemsForUser();
+  renderItems();
+  renderDashboard();
+}
+
+function closeAllMenus() {
+  document.querySelectorAll(".item-menu-options").forEach((menu) => {
+    menu.classList.add("hidden");
+  });
+  document.querySelectorAll(".item-menu-toggle").forEach((btn) => {
+    btn.setAttribute("aria-expanded", "false");
+  });
+}
+
+// close item menus when clicking elsewhere
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".item-menu")) {
+    closeAllMenus();
+  }
+});
+
+// ====== FILTERS ======
+function updateFilterOptions() {
+  if (!filterCategory || !filterSubcategory || !filterColor) return;
+
+  const setSelectOptions = (select, options, defaultLabel, currentValue) => {
+    const prev = currentValue || select.value || "";
+    select.innerHTML = `<option value="">${defaultLabel}</option>`;
+    options.forEach((opt) => {
+      const optionEl = document.createElement("option");
+      optionEl.value = opt;
+      optionEl.textContent = toTitleCase(opt);
+      select.appendChild(optionEl);
+    });
+    if ([...select.options].some((o) => o.value === prev)) {
+      select.value = prev;
+    } else {
+      select.value = "";
+    }
+  };
+
+  const uniqueSorted = (arr) =>
+    [...new Set(arr.filter(Boolean).map((v) => v.toString().trim()))].sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: "base" })
+    );
+
+  const categories = uniqueSorted(items.map((i) => i.category));
+  const subcategories = uniqueSorted(items.map((i) => i.subcategory));
+  const colors = uniqueSorted(items.map((i) => i.color));
+
+  setSelectOptions(filterCategory, categories, "All categories", filters.category);
+  setSelectOptions(filterSubcategory, subcategories, "All subcategories", filters.subcategory);
+  setSelectOptions(filterColor, colors, "All colors", filters.color);
+}
+
+function getFilteredItems() {
+  const match = (value, filter) =>
+    !filter || (value || "").toString().toLowerCase() === filter.toLowerCase();
+  return items.filter(
+    (item) =>
+      match(item.category, filters.category) &&
+      match(item.subcategory, filters.subcategory) &&
+      match(item.color, filters.color)
+  );
+}
+
+function handleFilterChange() {
+  filters = {
+    category: filterCategory ? filterCategory.value : "",
+    subcategory: filterSubcategory ? filterSubcategory.value : "",
+    color: filterColor ? filterColor.value : "",
+  };
+  renderItems();
+}
+
+if (filterCategory) filterCategory.addEventListener("change", handleFilterChange);
+if (filterSubcategory) filterSubcategory.addEventListener("change", handleFilterChange);
+if (filterColor) filterColor.addEventListener("change", handleFilterChange);
+
 // ====== FORM SUBMIT ======
 if (itemForm) {
   itemForm.addEventListener("submit", (e) => {
@@ -412,32 +688,53 @@ if (itemForm) {
     const brand = document.getElementById("item-brand").value.trim();
     const color = document.getElementById("item-color").value.trim();
     const priceRaw = document.getElementById("item-price").value;
+    const wearsRaw = document.getElementById("item-wears").value;
     const condition = document.getElementById("item-condition").value;
 
     if (!name || !color) return;
 
     const price = priceRaw ? parseFloat(priceRaw) : null;
+    const wearsValue = wearsRaw ? parseInt(wearsRaw, 10) : 0;
+    const wears = Number.isNaN(wearsValue) || wearsValue < 0 ? 0 : wearsValue;
 
-    const newItem = {
-      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-      name,
-      category,
-      subcategory,
-      brand,
-      color,
-      price,
-      condition,
-      wears: 0,
-    };
+    if (editingItemId) {
+      items = items.map((item) =>
+        item.id === editingItemId
+          ? { ...item, name, category, subcategory, brand, color, price, condition, wears }
+          : item
+      );
+    } else {
+      const newItem = {
+        id: generateId(),
+        name,
+        category,
+        subcategory,
+        brand,
+        color,
+        price,
+        condition,
+        wears,
+      };
+      items.push(newItem);
+    }
 
-    items.push(newItem);
     saveItemsForUser();
     renderItems();
     renderDashboard();
     itemForm.reset();
     document.getElementById("item-category").value = "tops";
     document.getElementById("item-condition").value = "new";
+    const wearsInput = document.getElementById("item-wears");
+    if (wearsInput) wearsInput.value = 0;
+    editingItemId = null;
+    if (itemFormTitle) itemFormTitle.textContent = "Add an item";
+    if (itemFormSubmit) itemFormSubmit.textContent = "Add item";
     closeAddItemModal();
+
+    // jump to Closet so the new item is visible immediately
+    if (closetNavLink) {
+      showPage("closet");
+    }
   });
 }
 

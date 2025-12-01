@@ -8,16 +8,16 @@
 </head>
 <body>
     <header>
-        <h1>Wearhouse</h1>
-        <p>Your wardrobe, in your hands.</p>
+        <div>
+            <h1>Wearhouse</h1>
+            <p class="tagline">Your wardrobe, in your hands.</p>
+        </div>
+        <nav class="top-nav">
+            <button class="nav-link active" data-page="home">Home</button>
+            <button class="nav-link" data-page="closet">Closet</button>
+            <button class="nav-link" data-page="outfits">Outfits</button>
+        </nav>
     </header>
-
-    <!-- NAV BAR -->
-    <nav class="top-nav">
-        <button class="nav-link active" data-page="home">Home</button>
-        <button class="nav-link" data-page="closet">Closet</button>
-        <button class="nav-link" data-page="outfits">Outfits</button>
-    </nav>
 
         <section id="login-screen" class="page-auth">
             <h2>Welcome to Wearhouse</h2>
@@ -43,19 +43,19 @@
     <div id="add-item-modal" class="modal hidden">
         <div class="modal-content">
         <button class="close-modal" id="close-modal-btn">×</button>
-        <h2>Add an item</h2>
+        <h2 id="item-form-title">Add an item</h2>
         <form id="item-form">
             <label for="item-name">Name your item</label>
-            <input type="text" id="item-name" placeholder="Grey Cardigan" required>
+            <input type="text" id="item-name"  required>
 
             <label for="item-category">Category</label>
             <select id="item-category">
-            <option value="tops">Tops</option>
-            <option value="bottoms">Bottoms</option>
-            <option value="shoes">Shoes</option>
-            <option value="outerwear">Outerwear</option>
-            <option value="dresses">Dresses</option>
-            <option value="accessories">Accessories</option>
+            <option value="Tops">Tops</option>
+            <option value="Bottoms">Bottoms</option>
+            <option value="Shoes">Shoes</option>
+            <option value="Outerwear">Outerwear</option>
+            <option value="Dresses">Dresses</option>
+            <option value="Accessories">Accessories</option>
             </select>
 
             <label for="item-subcategory">Subcategory</label>
@@ -70,13 +70,16 @@
             <label for="item-price">Price ($)</label>
             <input type="number" id="item-price" min="0" step="0.01">
 
+            <label for="item-wears">Wears logged</label>
+            <input type="number" id="item-wears" min="0" step="1" value="0">
+
             <label for="item-condition">Condition</label>
             <select id="item-condition">
             <option value="new">Bought new</option>
             <option value="secondhand">Secondhand</option>
             </select>
 
-            <button type="submit">Add item</button>
+            <button type="submit" id="item-form-submit">Add item</button>
         </form>
         </div>
     </div>
@@ -92,6 +95,26 @@
         <!-- CLOSET -->
         <section id="closet" class="page-section hidden">
         <h2>Your Closet</h2>
+        <div class="filter-bar">
+            <div class="filter-field">
+                <label for="filter-category">Category</label>
+                <select id="filter-category">
+                    <option value="">All categories</option>
+                </select>
+            </div>
+            <div class="filter-field">
+                <label for="filter-subcategory">Subcategory</label>
+                <select id="filter-subcategory">
+                    <option value="">All subcategories</option>
+                </select>
+            </div>
+            <div class="filter-field">
+                <label for="filter-color">Color</label>
+                <select id="filter-color">
+                    <option value="">All colors</option>
+                </select>
+            </div>
+        </div>
         <div id="items-list"></div>
         </section>
 
