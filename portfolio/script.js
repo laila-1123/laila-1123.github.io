@@ -1,16 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-  /* =============================
-   *   FOOTER YEAR
-   * ============================= */
   const yearEl = document.getElementById('year');
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
   }
 
-  /* =============================
-   *   WORK PAGE: GRID + MODAL
-   *   (runs only if #projectGrid exists)
-   * ============================= */
+// work grid
   const grid = document.getElementById('projectGrid');
   if (grid) {
     const projects = [
@@ -131,9 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     render('all');
   }
 
-  /* =============================
-   *   FEATURE GALLERY LIGHTBOX
-   * ============================= */
+//featuerd 
   const featureGallery = document.getElementById('featureGallery');
   const featureLightbox = document.getElementById('featureLightbox');
   const featureLightboxImg = document.getElementById('featureLightboxImg');
@@ -176,9 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* =============================
-   *   SMOOTH SCROLL TO CONTACT
-   * ============================= */
+//scroll to contact
   document.querySelectorAll('a[href="#contact"]').forEach(a=>{
     a.addEventListener('click', (e)=>{
       e.preventDefault();
@@ -187,9 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* =============================
-   *   MOBILE NAV TOGGLE
-   * ============================= */
+//mobile nav toggle
   const navToggle = document.querySelector('.nav-toggle');
   const navMenu = document.querySelector('.nav-menu');
 

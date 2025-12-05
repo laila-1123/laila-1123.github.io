@@ -59,14 +59,14 @@ function readFileAsDataUrl(file) {
 }
 
 const PLACEHOLDER_SVGS = {
-  // Inspired by common line icon styles; using simple strokes for clarity.
-  tops: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16l8-6 6 4 6-4 8 6-6 8v24H24V24z"/><path d="M32 14v10"/></g></svg>`,
-  bottoms: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h20l-2 14 2 26h-8l-2-16-2 16h-8l2-26z"/><path d="M32 26l6-4"/></g></svg>`,
-  shoes: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M12 36l8-10 10 8 12 3 10 4v9H12z"/></svg>`,
-  outerwear: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 14l8-4h4l8 4 4 10v28H18V24z"/><path d="M22 24l-6 8v24"/><path d="M42 24l6 8v24"/><path d="M32 10v10"/></g></svg>`,
-  dresses: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M26 10h12l-2 8 8 10-8 24H24l-8-24 8-10z"/><path d="M28 22h8"/></g></svg>`,
-  accessories: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="22" width="32" height="26" rx="4"/><path d="M24 22c0-6 4-10 8-10s8 4 8 10"/></g></svg>`,
-  other: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M32 8l10 14H22z"/><path d="M22 22h20v24H22z"/><path d="M22 30h20"/></g></svg>`
+  // Simple outlines tuned to match the silhouette of each garment type.
+  tops: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 18l7-6h10l7 6 6 3-4 9-5-3v21H20V27l-5 3-4-9z"/><path d="M32 12v12"/></g></svg>`,
+  bottoms: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10h20l-2 12 2 30h-8l-2-18-2 18h-8l2-30z"/><path d="M24 16h16"/><path d="M32 22v8"/><path d="M26 36h12"/></g></svg>`,
+  shoes: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 36l10-7 8 6 12 4 10 2v7H12z"/><path d="M20 29l1-6 6 5"/><path d="M36 39c1-2 4-3 8-3"/></g></svg>`,
+  outerwear: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 14l8-4h4l8 4 6 12v26H16V26z"/><path d="M22 26l-6 6v20"/><path d="M42 26l6 6v20"/><path d="M32 10v12"/><path d="M28 24h8"/></g></svg>`,
+  dresses: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M24 10h16l-2 8 7 9-8 25H23l-8-25 7-9z"/><path d="M28 18l-2-8"/><path d="M36 18l2-8"/><path d="M26 28h12"/></g></svg>`,
+  accessories: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="24" width="36" height="22" rx="5"/><path d="M22 24c0-8 4-12 10-12s10 4 10 12"/><path d="M24 32h16"/></g></svg>`,
+  other: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke="#43309f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M32 12a5 5 0 00-5 5c0 3 3 4 5 4a4 4 0 014 4v3"/><path d="M14 32l18-10 18 10v12c0 4-3 8-7 8H21c-4 0-7-4-7-8z"/><path d="M14 38h36"/></g></svg>`
 };
 
 function svgToDataUrl(svg) {
