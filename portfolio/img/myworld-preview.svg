@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">myworld app preview</title>
+  <desc id="desc">Abstract wireframe-style preview representing screens of the myworld app.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0c0b"/>
+      <stop offset="100%" stop-color="#0f1711"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" rx="28" fill="url(#bg)" />
+  <rect x="80" y="70" width="220" height="460" rx="20" fill="#161d17" stroke="#2f3a2f" stroke-width="2"/>
+  <rect x="310" y="70" width="220" height="460" rx="20" fill="#161d17" stroke="#2f3a2f" stroke-width="2"/>
+  <rect x="540" y="70" width="180" height="200" rx="16" fill="#161d17" stroke="#2f3a2f" stroke-width="2"/>
+
+  <rect x="102" y="98" width="176" height="110" rx="12" fill="#1f2a21" stroke="#3a4b3f" stroke-width="2"/>
+  <rect x="332" y="98" width="176" height="110" rx="12" fill="#1f2a21" stroke="#3a4b3f" stroke-width="2"/>
+
+  <rect x="102" y="228" width="176" height="16" rx="8" fill="#4f9470"/>
+  <rect x="332" y="228" width="110" height="16" rx="8" fill="#e4b363"/>
+
+  <rect x="102" y="258" width="176" height="12" rx="6" fill="#232c25"/>
+  <rect x="332" y="258" width="176" height="12" rx="6" fill="#232c25"/>
+
+  <rect x="102" y="286" width="176" height="12" rx="6" fill="#232c25"/>
+  <rect x="332" y="286" width="176" height="12" rx="6" fill="#232c25"/>
+
+  <rect x="102" y="314" width="176" height="12" rx="6" fill="#232c25"/>
+  <rect x="332" y="314" width="176" height="12" rx="6" fill="#232c25"/>
+
+  <rect x="102" y="342" width="110" height="16" rx="8" fill="#e4b363"/>
+  <rect x="332" y="342" width="176" height="16" rx="8" fill="#4f9470"/>
+
+  <rect x="102" y="378" width="176" height="120" rx="12" fill="#1f2a21" stroke="#3a4b3f" stroke-width="2"/>
+  <rect x="332" y="378" width="176" height="120" rx="12" fill="#1f2a21" stroke="#3a4b3f" stroke-width="2"/>
+
+  <rect x="562" y="98" width="136" height="24" rx="12" fill="#e4b363"/>
+  <rect x="562" y="138" width="136" height="12" rx="6" fill="#232c25"/>
+  <rect x="562" y="162" width="136" height="12" rx="6" fill="#232c25"/>
+  <rect x="562" y="186" width="136" height="12" rx="6" fill="#232c25"/>
+  <rect x="562" y="222" width="96" height="16" rx="8" fill="#4f9470"/>
+
+  <circle cx="180" cy="430" r="14" fill="#4f9470"/>
+  <circle cx="410" cy="430" r="14" fill="#e4b363"/>
+</svg>

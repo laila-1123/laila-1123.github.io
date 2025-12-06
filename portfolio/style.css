@@ -273,9 +273,9 @@ p, li, input, textarea, button, label{
 /* Eyebrow label (like Brandon’s site) */
 
 .eyebrow{
-  font-size:0.75rem;
+  font-size:0.85rem;
   text-transform:uppercase;
-  letter-spacing:0.12em;
+  letter-spacing:1px;
   color:var(--muted);
   margin:0 0 6px;
 }
@@ -340,6 +340,16 @@ h2 + .sub {
   justify-content: center;
   align-items: center;
   text-align: center;
+  min-height: 75vh;
+  padding-block: 120px 96px;
+}
+
+.hero-home h1 {
+  font-size: clamp(3.8rem, 9vw, 6rem);
+}
+
+.hero-home .sub {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
 }
 
 .page-hero-text {
@@ -410,6 +420,82 @@ h2 + .sub {
   object-position: center;
   border-radius: 16px;
   border: 1px solid var(--border);
+}
+
+/* ============================= */
+/*        HOME PREVIEW           */
+/* ============================= */
+
+.home-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  padding-block: 24px 48px;
+}
+
+.home-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 16px 20px;
+  text-decoration: none;
+  color: var(--text);
+  display: grid;
+  gap: 12px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.home-card:hover {
+  border-color: var(--ring);
+  transform: translateY(-3px);
+}
+
+.home-card-media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.home-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.home-card-media.duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 6px;
+  aspect-ratio: 5 / 3;
+}
+
+.home-card-media.duo img {
+  object-fit: contain;
+  border-radius: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.home-card h3 {
+  margin: 0;
+  letter-spacing: 0.2px;
+}
+
+.home-card-text {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.home-card-link {
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.3px;
 }
 
 /* ============================= */
