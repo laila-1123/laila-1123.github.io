@@ -400,11 +400,23 @@ h2 + .sub {
 
 .two-col-text {
   text-align: left;
+  max-width: 680px;
 }
 
 .two-col-text h2, 
 .two-col-text p {
   text-align: left;
+}
+
+.two-col-text p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin: 0 0 18px;
+}
+
+.two-col-text p:last-child {
+  margin-bottom: 0;
 }
 
 .two-col-image {
@@ -418,7 +430,7 @@ h2 + .sub {
   height: 420px;
   object-fit: cover;
   object-position: center;
-  border-radius: 16px;
+  border-radius: 50%;
   border: 1px solid var(--border);
 }
 
