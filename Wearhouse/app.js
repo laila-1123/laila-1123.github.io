@@ -43,10 +43,17 @@ function generateId() {
 }
 
 function toTitleCase(str) {
-  return (str || "")
-    .toString()
-    .toLowerCase()
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  const lower = (str || "").toString().toLowerCase();
+  const contractions = ["'s", "'t", "'m", "'d", "'re", "'ve", "'ll"];
+  return lower.replace(/\b\w/g, (c, i) => {
+    if (i > 0 && lower[i - 1] === "'") {
+      const slice = lower.slice(i - 1, i + 2);
+      if (contractions.some((contraction) => slice.startsWith(contraction))) {
+        return c;
+      }
+    }
+    return c.toUpperCase();
+  });
 }
 
 function readFileAsDataUrl(file) {
@@ -272,42 +279,38 @@ function renderItems() {
     div.className = "item-card";
 
     const wears = item.wears || 0;
-    const ppw = item.price && wears > 0 ? (item.price / wears).toFixed(2) : null;
-    const conditionLabel = item.condition === "secondhand" ? "Secondhand" : "Bought new";
-
+    const hasPrice = typeof item.price === "number" ? item.price > 0 : Boolean(item.price);
+    const ppw = hasPrice && wears > 0 ? (item.price / wears).toFixed(2) : null;
+    const statsLine = ppw ? `PPW: $${ppw}` : `Wears: ${wears}`;
     const placeholder = getPlaceholderForCategory(item.category);
-    const photoHtml = item.imageData
+    const photoElement = item.imageData
       ? `<img class="item-photo" src="${item.imageData}" alt="${toTitleCase(item.name)}">`
       : `<div class="item-photo" aria-hidden="true" style="background-image:url('${placeholder}');"></div>`;
+    const photoHtml = `
+      <div class="item-photo-wrap">
+        ${photoElement}
+        <button data-id="${item.id}" class="wear-btn photo-wear-label">Log wear</button>
+      </div>
+    `;
 
     div.innerHTML = `
       ${photoHtml}
       <div class="item-card__body">
         <div class="item-card__top">
-          <div>
+          <div class="item-title">
             <strong>${toTitleCase(item.name)}</strong>
-            <div style="font-size: 0.8rem; color: #666;">
-              ${toTitleCase(item.category) || ""}${item.subcategory ? " • " + toTitleCase(item.subcategory) : ""}${item.brand ? " • " + toTitleCase(item.brand) : ""}
-            </div>
-            <div style="font-size: 0.8rem; color: #666;">
-              ${toTitleCase(item.color) || ""}${item.price ? " • $" + item.price : ""}
-            </div>
-            <div style="font-size: 0.75rem; margin-top: 4px;">
-              Condition: ${conditionLabel}
-            </div>
-            <div style="font-size: 0.75rem; margin-top: 4px;">
-              Wears: ${wears} ${ppw ? "• PPW: $" + ppw : ""}
-            </div>
+            ${item.brand ? `<span class="item-brand">${toTitleCase(item.brand)}</span>` : ""}
           </div>
-          <div class="item-actions">
-            <button data-id="${item.id}" class="wear-btn primary">Wore it</button>
-            <div class="item-menu">
-              <button class="item-menu-toggle" aria-label="More options" aria-expanded="false">⋯</button>
-              <div class="item-menu-options hidden">
-                <button data-id="${item.id}" class="set-wears-btn">Set wears</button>
-                <button data-id="${item.id}" class="edit-btn">Edit</button>
-                <button data-id="${item.id}" class="delete-btn danger">Delete</button>
-              </div>
+          <p class="item-meta-line item-stat-line">${statsLine}</p>
+        </div>
+        <div class="item-actions">
+          <div class="item-menu">
+            <button class="item-menu-toggle" aria-label="More options" aria-expanded="false">⋯</button>
+            <div class="item-menu-options hidden">
+              <button data-id="${item.id}" class="set-wears-btn">Set wears</button>
+              <button data-id="${item.id}" class="details-btn">See details</button>
+              <button data-id="${item.id}" class="edit-btn">Edit</button>
+              <button data-id="${item.id}" class="delete-btn danger">Delete</button>
             </div>
           </div>
         </div>
@@ -331,6 +334,13 @@ function renderItems() {
   });
 
   document.querySelectorAll(".edit-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-id");
+      startEditItem(id);
+    });
+  });
+
+  document.querySelectorAll(".details-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const id = btn.getAttribute("data-id");
       startEditItem(id);
@@ -428,6 +438,15 @@ function renderSellBox() {
       renderSellBox();
     });
   });
+}
+
+function addToSellList(itemId, price = null) {
+  if (!itemId) return;
+  sellList = sellList.filter((entry) => entry.itemId !== itemId);
+  sellList.push({ itemId, price });
+  saveSellListForUser();
+  renderSellBox();
+  renderDashboard();
 }
 
 // ====== RENDER: DASHBOARD ======
@@ -568,20 +587,44 @@ function renderDashboard() {
     `;
   };
 
+  const renderQuickSellList = (list, emptyText, valueFormatter) => {
+    if (!list.length) return `<p class="dash-subtext">${emptyText}</p>`;
+    const alreadySelling = new Set(sellList.map((entry) => entry.itemId));
+    return `
+      <ul class="dash-list quick-sell-list">
+        ${list
+          .map((item) => {
+            const isSelling = alreadySelling.has(item.id);
+            const buttonText = isSelling ? "On sell list" : "Add to sell list";
+            return `
+              <li>
+                <span>${toTitleCase(item.name)}</span>
+                <span class="pill">${valueFormatter(item)}</span>
+                <button class="quick-sell-btn" data-id="${item.id}" type="button" ${
+                  isSelling ? "disabled" : ""
+                }>${buttonText}</button>
+              </li>
+            `;
+          })
+          .join("")}
+      </ul>
+    `;
+  };
+
   homeStats.innerHTML = `
-    <div class="dashboard-grid">
+    <div class="dashboard-top">
       <div class="dash-card">
         <h3>Total items</h3>
         <p class="dash-value">${totalItems}</p>
-        <p class="dash-subtext">Everything in your wardrobe. Wears logged: ${totalWears}</p>
       </div>
 
       <div class="dash-card">
         <h3>Total investment</h3>
         <p class="dash-value">${formatCurrency(totalInvestment)}</p>
-        <p class="dash-subtext">Sum of item prices you've entered.</p>
       </div>
+    </div>
 
+    <div class="dashboard-grid">
       <div class="dash-card">
         <h3>Most worn</h3>
         ${renderList(byMostWorn, "No wears yet.", (item) => `${item.wears || 0} wears`)}
@@ -589,60 +632,72 @@ function renderDashboard() {
 
       <div class="dash-card">
         <h3>Least worn</h3>
-        ${renderList(byLeastWorn, "Add items to track wears.", (item) => `${item.wears || 0} wears`)}
+        ${renderQuickSellList(
+          byLeastWorn,
+          "Add items to track wears.",
+          (item) => `${item.wears || 0} wears`
+        )}
       </div>
 
       <div class="dash-card">
-        <h3>Highest price per wear</h3>
-        ${
-          highestPpw
-            ? `<p class="dash-value">${formatCurrency(highestPpw.ppw)}</p><p class="dash-subtext">${toTitleCase(highestPpw.name)}</p>`
-            : `<p class="dash-subtext">Need prices and wears to calculate.</p>`
-        }
-      </div>
-
-      <div class="dash-card">
-        <h3>Lowest price per wear</h3>
-        ${
-          lowestPpw
-            ? `<p class="dash-value">${formatCurrency(lowestPpw.ppw)}</p><p class="dash-subtext">${toTitleCase(lowestPpw.name)}</p>`
-            : `<p class="dash-subtext">Need prices and wears to calculate.</p>`
-        }
-      </div>
-
-      <div class="dash-card chart-card">
-        <div>
-          <h3 style="margin:0 0 0.5rem;">New vs secondhand</h3>
-        </div>
-        <div class="chart-hover-wrap">
-          <div class="pie" style="background: ${conditionGradient};"></div>
-          <div class="pie-hover-labels">
-            ${renderHoverLabels(
-              conditionSegments,
-              (seg) => `${seg.label} (${seg.count}) — ${seg.percent}%`,
-              "Add condition info to see the mix."
-            )}
+        <h3>Price per wear</h3>
+        <div class="ppw-split">
+          <div>
+            <p class="ppw-label">Highest</p>
+            ${
+              highestPpw
+                ? `<p class="dash-value">${formatCurrency(highestPpw.ppw)}</p><p class="dash-subtext">${toTitleCase(highestPpw.name)}</p>`
+                : `<p class="dash-subtext">Need prices and wears.</p>`
+            }
+          </div>
+          <div>
+            <p class="ppw-label">Lowest</p>
+            ${
+              lowestPpw
+                ? `<p class="dash-value">${formatCurrency(lowestPpw.ppw)}</p><p class="dash-subtext">${toTitleCase(lowestPpw.name)}</p>`
+                : `<p class="dash-subtext">Need prices and wears.</p>`
+            }
           </div>
         </div>
       </div>
 
       <div class="dash-card chart-card">
-        <div>
-          <h3 style="margin:0 0 0.5rem;">Wardrobe by category</h3>
+        <div class="chart-block">
+          <h3>New vs secondhand</h3>
+          <div class="chart-hover-wrap">
+            <div class="pie" style="background: ${conditionGradient};"></div>
+            <div class="pie-hover-labels">
+              ${renderHoverLabels(
+                conditionSegments,
+                (seg) => `${seg.label} (${seg.count}) — ${seg.percent}%`,
+                "Add condition info to see the mix."
+              )}
+            </div>
+          </div>
         </div>
-        <div class="chart-hover-wrap">
-          <div class="pie" style="background: ${gradient};"></div>
-          <div class="pie-hover-labels">
-            ${renderHoverLabels(
-              pieSegments,
-              (seg) => `${toTitleCase(seg.cat)} (${seg.count}) — ${seg.percent}%`,
-              "Add items to see the mix."
-            )}
+        <div class="chart-block">
+          <h3>Wardrobe by category</h3>
+          <div class="chart-hover-wrap">
+            <div class="pie" style="background: ${gradient};"></div>
+            <div class="pie-hover-labels">
+              ${renderHoverLabels(
+                pieSegments,
+                (seg) => `${toTitleCase(seg.cat)} (${seg.count}) — ${seg.percent}%`,
+                "Add items to see the mix."
+              )}
+            </div>
           </div>
         </div>
       </div>
     </div>
   `;
+
+  homeStats.querySelectorAll(".quick-sell-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-id");
+      addToSellList(id);
+    });
+  });
 }
 
 // ====== RENDER: OUTFITS ======
@@ -772,10 +827,18 @@ function updateFilterOptions() {
     }
   };
 
-  const uniqueSorted = (arr) =>
-    [...new Set(arr.filter(Boolean).map((v) => v.toString().trim()))].sort((a, b) =>
+  const uniqueSorted = (arr) => {
+    const map = new Map();
+    arr.forEach((v) => {
+      const cleaned = v ? v.toString().trim() : "";
+      if (!cleaned) return;
+      const key = cleaned.toLowerCase();
+      if (!map.has(key)) map.set(key, cleaned);
+    });
+    return [...map.values()].sort((a, b) =>
       a.localeCompare(b, undefined, { sensitivity: "base" })
     );
+  };
 
   const categories = uniqueSorted(items.map((i) => i.category));
   const subcategories = uniqueSorted(items.map((i) => i.subcategory));
