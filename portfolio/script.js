@@ -47,15 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-//scroll to contact
-  document.querySelectorAll('a[href="#contact"]').forEach(a=>{
-    a.addEventListener('click', (e)=>{
-      e.preventDefault();
-      const el = document.getElementById('contact');
-      if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
-    });
-  });
-
 //mobile nav toggle
   const navToggle = document.querySelector('.nav-toggle');
   const navMenu = document.querySelector('.nav-menu');

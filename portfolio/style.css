@@ -170,7 +170,8 @@ nav ul {
 /* Logo */
 
 .nav-logo img {
-  height: 32px;
+  height: 36px;
+  width: auto;
   transition: transform 0.5s ease;
 }
 
@@ -440,7 +441,8 @@ h2 + .sub {
 
 .home-preview {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(2, minmax(260px, 360px));
+  justify-content: center;
   gap: 20px;
   padding-block: 24px 48px;
 }
@@ -454,7 +456,34 @@ h2 + .sub {
   color: var(--text);
   display: grid;
   gap: 12px;
+  text-align: center;
+  justify-items: center;
   transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.home-card.about-card {
+  grid-template-columns: minmax(140px, 200px) 1fr;
+  align-items: center;
+  grid-column: 1 / -1;
+  max-width: 760px;
+  margin-inline: auto;
+  margin-bottom: 16px;
+}
+
+.home-card.about-card .home-card-media {
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+}
+
+.home-card.about-card .home-card-media img {
+  transform: scale(1.16);
+  transform-origin: center;
+}
+
+.home-card-content {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
 }
 
 .home-card:hover {
@@ -508,6 +537,21 @@ h2 + .sub {
   font-weight: 600;
   color: var(--text);
   letter-spacing: 0.3px;
+}
+
+@media (max-width: 700px) {
+  .home-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .home-card.about-card {
+    grid-template-columns: 1fr;
+  }
+
+  .home-card.about-card .home-card-media {
+    max-width: 220px;
+    margin-inline: auto;
+  }
 }
 
 /* ============================= */
@@ -968,24 +1012,35 @@ footer{
   transition: padding 0.3s ease, background-color 0.3s ease;
 }
 
-/* When someone clicks "Contact" */
-#contact:target {
-  padding: 64px 0 48px; /* slightly larger */
-  background: var(--panel); /* subtle highlight */
-}
-
 /* Icon row */
 .footer-icons {
   display: flex;
   gap: 24px;
 }
 
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 64px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 /* Icons themselves */
 .footer-icon {
-  width: 26px;
-  height: 26px;
-  opacity: 0.8;
+  width: 32px;
+  height: 32px;
+  opacity: 0.9;
   transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.icon-link:hover {
+  box-shadow: 0 0 0 3px var(--ring);
+  transform: translateY(-1px);
 }
 
 .icon-link:hover .footer-icon {
@@ -1007,6 +1062,74 @@ footer{
   letter-spacing: 1.6px;
   margin: 0;
   color: var(--muted);
+}
+
+/* ============================= */
+/*        CONTACT + RESUME       */
+/* ============================= */
+
+.contact-panel,
+.resume-panel {
+  display: grid;
+  gap: 32px;
+}
+
+.contact-panel {
+  justify-items: center;
+}
+
+.contact-card {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.contact-actions,
+.resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+.contact-actions .btn {
+  min-width: 140px;
+  justify-content: center;
+}
+
+.contact-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 170px;
+}
+
+.contact-label {
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  line-height: 1.2;
+  min-height: 1.2em;
+  color: var(--muted);
+  margin: 0;
+  text-align: center;
+}
+
+.resume-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  text-align: center;
+}
+
+.resume-embed {
+  min-height: 520px;
 }
 
 /* ============================= */
@@ -1045,7 +1168,7 @@ footer{
   }
 
   .nav-logo img {
-    height: 40px;
+    height: 48px;
     width: auto;
     transition: transform 1s ease;
   }
@@ -1138,7 +1261,7 @@ footer{
   }
 
   .nav-logo img {
-    height: 32px;
+    height: 36px;
   }
 
   /* Show hamburger on small screens */
